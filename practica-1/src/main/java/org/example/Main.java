@@ -46,5 +46,44 @@ public class Main {
     String html = document.html();
     int length = html.split("\n").length;
     System.out.println("Length: " + length);
+
+    //2.
+    Elements paragraphs = document.select("p");
+    int totalParagraphs = paragraphs.size();
+    System.out.println("Paragraphs: " + totalParagraphs);
+
+    //3.
+    for(Element p : paragraphs) totalImages += paragraphs.select("img").size();
+    System.out.println("Images: " + totalImages);
+
+    //4.
+    Elements forms = document.select("form");
+    System.out.println("Forms: " + forms.size());
+
+    for(Element f : forms){
+      String method = f.attr("method");
+      if(method.equalsIgnoreCase("POST")) post++;
+      if(method.equalsIgnoreCase("GET")) get++;
+    }
+    System.out.println("POST: " + post);
+    System.out.println("GET: " + get);
+
+    //5.
+    for(Element f : forms){
+      Elements input = f.select("input");
+      for(Element i : input) System.out.println("Type: " + i.attr("type"));
+    }
+
+    //6.
+    for(Element f : forms){
+      String method = forms.attr("method");
+      if(!method.equalsIgnoreCase("POST")) continue;
+
+      Document respServer = Jsoup.connect(String.valueOf(url))
+        .data("asignatura","practica1")
+        .header("matricula-id","10141415")
+        .post();
+        System.out.println("POST response: " + respServer.body().text());
+    }
   }
 }
