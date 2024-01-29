@@ -76,7 +76,7 @@ public class Main {
 
     //6.
     for(Element f : forms){
-      String method = forms.attr("method");
+      String method = f.attr("method");
       if(!method.equalsIgnoreCase("POST")) continue;
 
       Document respServer = Jsoup.connect(String.valueOf(url))
@@ -86,4 +86,7 @@ public class Main {
         System.out.println("POST response: " + respServer.body().text());
     }
   }
+
+
 }
+
