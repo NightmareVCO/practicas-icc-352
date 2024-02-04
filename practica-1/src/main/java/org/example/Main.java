@@ -37,9 +37,13 @@ public class Main {
     if (httpResponse == null) throw new RuntimeException("Response is null");
 
     String contentType = String.valueOf(httpResponse.headers().firstValue("Content-Type"));
-    System.out.println("Content-Type: " + contentType);
-    if (!contentType.contains("text/html")) throw new RuntimeException("Content-Type is not text/html");
+    if (!contentType.contains("html")) {
 
+      String content = contentType.split("/")[1].split("]")[0];
+      System.out.println("Content-Type is "+ content + " and not html. Exiting...");
+      return;
+    }
+    System.out.println("Content-Type: " + contentType);
     Document document = Jsoup.connect(String.valueOf(url)).get();
 
     //1.
@@ -86,7 +90,5 @@ public class Main {
         System.out.println("POST response: " + respServer.body().text());
     }
   }
-
-
 }
 
