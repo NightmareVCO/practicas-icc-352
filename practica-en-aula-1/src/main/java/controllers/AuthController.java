@@ -21,6 +21,11 @@ public class AuthController extends BaseController {
     ctx.render("/public/templates/login.html");
   }
 
+  public void protegerLogin(Context ctx){
+    if((ctx.sessionAttribute("usuario")) != null)
+      ctx.redirect("/");
+  }
+
   public void checkLogin(Context ctx) {
     String username = ctx.formParam("username");
     String password = ctx.formParam("password");
@@ -37,10 +42,11 @@ public class AuthController extends BaseController {
     ctx.req().getSession().invalidate();
     ctx.redirect("/");
   }
-
+  
   @Override
   public void applyRoutes() {
     app.routes(() -> path("/auth", () -> {
+      before("/login", this::protegerLogin);
       get("/login", this::login);
       post("/login", this::checkLogin);
       get("/logout", this::logout);
