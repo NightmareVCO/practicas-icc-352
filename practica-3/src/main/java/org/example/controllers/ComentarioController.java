@@ -1,9 +1,9 @@
-package controllers;
+package org.example.controllers;
 
-import encapsulation.Comentario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import services.ComentarioService;
+import org.example.services.ComentarioService;
+import org.example.encapsulations.Comentario;
 import util.BaseController;
 
 import java.util.ArrayList;

@@ -1,18 +1,22 @@
-package services;
-
-import encapsulation.Comentario;
-import util.BaseService;
+package org.example.services;
+import org.example.encapsulations.Comentario;
 
 import java.util.ArrayList;
 
+//borrar el arreglo
+
+//implementar el BaseServiceDatabase
 public class ComentarioService {
 
+  // se va
   private final ArrayList<Comentario> comentarios;
 
   public ComentarioService() {
-    this.comentarios = new ArrayList<>();
+    this.comentarios = new ArrayList<>(); // se va
   }
 
+
+  // todos los metodos se van
   public ArrayList<Comentario> findAll() {
     return comentarios;
   }

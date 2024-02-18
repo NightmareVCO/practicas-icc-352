@@ -1,9 +1,11 @@
 package org.example;
-import controllers.*;
+
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.bundled.CorsPluginConfig;
-import services.*;
+import org.example.controllers.*;
+import org.example.services.*;
+
 
 public class Main {
   public static void main(String[] args) {
@@ -19,12 +21,14 @@ public class Main {
       config.plugins.enableCors(corsContainer -> corsContainer.add(CorsPluginConfig::anyHost));
     }).start(3000);
 
+    BootstrapService bootstrapService = new BootstrapService();
+    bootstrapService.startDb();
+
     ArticuloService articuloService = new ArticuloService();
     ComentarioService comentarioService = new ComentarioService();
     EtiquetaService etiquetaService = new EtiquetaService();
     UsuarioService usuarioService = new UsuarioService();
     AuthService authService = new AuthService();
-
 
     new ArticuloController(app, articuloService, etiquetaService, comentarioService).applyRoutes();
     new ComentarioController(app, comentarioService).applyRoutes();

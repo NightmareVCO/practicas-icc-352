@@ -1,4 +1,4 @@
-package encapsulation;
+package org.example.encapsulations;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,7 +8,11 @@ public class Articulo {
   private String cuerpo;
   private Usuario autor;
   private Date fecha;
+
+  // @OneToMany, a que 1 articulo puede tener muchos comentarios
   private ArrayList<Comentario> comentarios;
+
+  // @ManyToMany, a que 1 articulo puede tener muchas etiquetas
   private ArrayList<Etiqueta> etiquetas;
 
   public Articulo(long id, String titulo, String cuerpo, Usuario autor, Date fecha, ArrayList<Etiqueta> etiquetas) {

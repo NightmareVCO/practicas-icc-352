@@ -1,10 +1,11 @@
-package controllers;
+package org.example.controllers;
 
-import encapsulation.Usuario;
+import org.example.encapsulations.Usuario;
+import org.example.services.AuthService;
+import org.example.services.UsuarioService;
+
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import services.AuthService;
-import services.UsuarioService;
 import util.BaseController;
 
 
@@ -28,12 +29,12 @@ public class AuthController extends BaseController {
     String username = ctx.formParam("username");
     String password = ctx.formParam("password");
     Usuario usuario = usuarioService.findByUsername(username);
-
-    if(!usuarioService.checkPassword(usuario, password) || usuario == null)
+    if (usuario != null) {
+      ctx.sessionAttribute("usuario", usuario);
+      ctx.redirect("/articulos");
+    } else {
       ctx.redirect("/auth/login");
-
-    ctx.sessionAttribute("usuario", usuario);
-    ctx.redirect("/articulos");
+    }
   }
 
   public void logout(Context ctx) {

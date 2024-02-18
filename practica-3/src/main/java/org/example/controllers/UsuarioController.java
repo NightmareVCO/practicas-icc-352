@@ -1,15 +1,14 @@
-package controllers;
+package org.example.controllers;
 
-import encapsulation.Articulo;
-import encapsulation.Etiqueta;
-import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import services.UsuarioService;
+import org.example.encapsulations.Usuario;
+import org.example.services.UsuarioService;
 import util.BaseController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -23,27 +22,21 @@ public class UsuarioController extends BaseController {
   }
 
   public void listar(Context ctx) {
-    ArrayList<Usuario> usuarios = usuarioService.findAll();
+    List<Usuario> usuarios = usuarioService.findAll();
     Map<String, Object> modelo = new HashMap<>();
     modelo.put("usuarios", usuarios);
     ctx.render("/public/templates/usuarios.html", modelo);
   }
 
   public void crear(Context ctx) {
-    Usuario usuario = new Usuario(
-      ctx.formParam("username"),
-      ctx.formParam("nombre"),
-      ctx.formParam("password"),
-      ctx.formParam("admin") != null,
-      ctx.formParam("autor") != null
-    );
-    if (usuarioService.exists(usuario.getUsername())) {
-      ctx.status(400);
-      ctx.result("El usuario ya existe");
-      return;
-    }
+    Usuario usuario = new Usuario();
+    usuario.setUsername(ctx.formParam("username"));
+    usuario.setNombre(ctx.formParam("nombre"));
+    usuario.setPassword(ctx.formParam("password"));
+    usuario.setAdmin(ctx.formParam("admin") != null);
+    usuario.setAutor(ctx.formParam("autor") != null);
 
-    usuarioService.insert(usuario);
+    usuarioService.create(usuario);
     ctx.redirect("/usuarios");
   }
 
