@@ -1,15 +1,8 @@
 package controllers;
-
-import encapsulation.Articulo;
-import encapsulation.Etiqueta;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.EtiquetaService;
 import util.BaseController;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 public class EtiquetaController extends BaseController {
@@ -20,11 +13,9 @@ public class EtiquetaController extends BaseController {
     this.etiquetaService = etiquetaService;
   }
 
-  public void listar(Context ctx) {
-    ArrayList<Etiqueta> etiquetas = etiquetaService.findAll();
-    Map<String, Object> modelo = new HashMap<>();
-    modelo.put("etiquetas", etiquetas);
-    ctx.render("/public/templates/articulos.html", modelo);
+  public void listarByTag(Context ctx) {
+    String tag = ctx.queryParam("tag");
+    ctx.redirect("/articulos?tag=" + tag);
   }
 
   public void crear(Context ctx) {
@@ -42,7 +33,7 @@ public class EtiquetaController extends BaseController {
   @Override
   public void applyRoutes() {
     app.routes(() -> path("/etiquetas", () -> {
-      get("/", this::listar);
+      get("/", this::listarByTag);
       post("/", this::crear);
       put("/{id}", this::editar);
       delete("/{id}", this::eliminar);

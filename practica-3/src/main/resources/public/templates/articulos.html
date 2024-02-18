@@ -42,7 +42,7 @@
         <div class="d-inline-flex card  align-items-center" style="width: 16rem">
           <article th:each="e : ${etiquetas}">
             <div class="card-body p-1">
-              <a th:href="'etiquetas/' + ${e.id}">
+              <a th:href="'etiquetas/?tag=' + ${e.id}">
                 <h4><span class="badge bg-primary rounded-pill mb-0" th:text="${e.nombre}"></span></h4>
               </a>
             </div>
