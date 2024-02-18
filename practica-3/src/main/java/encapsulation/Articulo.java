@@ -1,24 +1,30 @@
 package encapsulation;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
-public class Articulo {
+@Entity
+public class Articulo implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   private String titulo;
   private String cuerpo;
+  @ManyToOne
   private Usuario autor;
   private Date fecha;
-  private ArrayList<Comentario> comentarios;
-  private ArrayList<Etiqueta> etiquetas;
+  @OneToMany
+  private List<Comentario> comentarios;
+  @OneToMany
+  private Set<Etiqueta> etiquetas;
 
-  public Articulo(long id, String titulo, String cuerpo, Usuario autor, Date fecha, ArrayList<Etiqueta> etiquetas) {
-    this.id = id;
-    this.titulo = titulo;
-    this.cuerpo = cuerpo;
-    this.autor = autor;
-    this.fecha = fecha;
-    this.etiquetas = etiquetas;
-    this.comentarios = new ArrayList<Comentario>();
+  public Articulo() {
+
   }
 
   public long getId() {

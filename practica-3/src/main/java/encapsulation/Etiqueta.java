@@ -1,6 +1,16 @@
 package encapsulation;
 
-public class Etiqueta {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+import java.io.Serializable;
+
+@Entity
+public class Etiqueta implements Serializable {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   private String nombre;
 
@@ -8,7 +18,9 @@ public class Etiqueta {
     this.id = id;
     this.nombre = nombre;
   }
+  public Etiqueta() {
 
+  }
   public long getId() {
     return id;
   }
@@ -27,8 +39,8 @@ public class Etiqueta {
 
   public String toString() {
     return "Etiqueta{" +
-      "id=" + id +
-      ", nombre='" + nombre + '\'' +
-      '}';
+            "id=" + id +
+            ", nombre='" + nombre + '\'' +
+            '}';
   }
 }
