@@ -7,6 +7,8 @@ import services.ComentarioService;
 import util.BaseController;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class ComentarioController extends BaseController {
@@ -18,7 +20,7 @@ public class ComentarioController extends BaseController {
   }
 
   public void listar(Context ctx) {
-    ArrayList<Comentario> comentarios = comentarioService.findAll();
+    List<Comentario> comentarios = comentarioService.findAll();
     ctx.result(comentarios.toString());
   }
 

@@ -9,30 +9,6 @@ public class UsuarioService extends BaseServiceDatabase<Usuario> {
 
   public UsuarioService() {
     super(Usuario.class);
-    Usuario usuario = new Usuario();
-    usuario.setUsername("admin");
-    usuario.setNombre("Administrador");
-    usuario.setPassword("admin");
-    usuario.setAdmin(true);
-    usuario.setAutor(true);
-
-    Usuario usuario2 = new Usuario();
-    usuario2.setUsername("user");
-    usuario2.setNombre("Usuario");
-    usuario2.setPassword("user");
-    usuario2.setAdmin(false);
-    usuario2.setAutor(true);
-
-    Usuario usuario3 = new Usuario();
-    usuario3.setUsername("user2");
-    usuario3.setNombre("Usuario2");
-    usuario3.setPassword("user2");
-    usuario3.setAdmin(false);
-    usuario3.setAutor(false);
-
-    this.create(usuario);
-    this.create(usuario2);
-    this.create(usuario3);
   }
 
   public Usuario find(String username) {
@@ -53,6 +29,11 @@ public class UsuarioService extends BaseServiceDatabase<Usuario> {
 
   public boolean delete(String username) {
     return this.dbRemove(username);
+  }
+
+  public boolean checkPassword(String username, String password) {
+    Usuario usuario = this.find(username);
+    return usuario != null && usuario.getPassword().equals(password);
   }
 
   public Usuario findByUsername(String username) {

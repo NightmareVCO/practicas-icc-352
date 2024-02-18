@@ -1,7 +1,5 @@
 package encapsulation;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.io.Serializable;
 
@@ -9,7 +7,6 @@ import java.io.Serializable;
 public class Usuario implements Serializable {
 
   @Id
-
   private String username;
   private String nombre;
   private String password;

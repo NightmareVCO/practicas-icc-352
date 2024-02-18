@@ -25,7 +25,7 @@ public class AuthController extends BaseController {
     String password = ctx.formParam("password");
     Usuario usuario = usuarioService.findByUsername(username);
 
-    if(!usuarioService.checkPassword(usuario, password) || usuario == null)
+    if(!usuarioService.checkPassword(username, password) || usuario == null)
       ctx.redirect("/auth/login");
 
     ctx.sessionAttribute("usuario", usuario);

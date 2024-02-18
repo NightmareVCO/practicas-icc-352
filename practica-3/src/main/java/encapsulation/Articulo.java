@@ -14,18 +14,16 @@ public class Articulo implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   private String titulo;
+  @Column(length = 1000)
   private String cuerpo;
   @ManyToOne
   private Usuario autor;
   private Date fecha;
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private List<Comentario> comentarios;
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   private Set<Etiqueta> etiquetas;
 
-  public Articulo() {
-
-  }
 
   public long getId() {
     return id;
@@ -67,31 +65,19 @@ public class Articulo implements Serializable {
     this.fecha = fecha;
   }
 
-  public ArrayList<Comentario> getComentarios() {
+  public List<Comentario> getComentarios() {
     return comentarios;
   }
 
-  public void setComentarios(ArrayList<Comentario> comentarios) {
+  public void setComentarios(List<Comentario> comentarios) {
     this.comentarios = comentarios;
   }
 
-  public ArrayList<Etiqueta> getEtiquetas() {
+  public Set<Etiqueta> getEtiquetas() {
     return etiquetas;
   }
 
-  public void setEtiquetas(ArrayList<Etiqueta> etiquetas) {
+  public void setEtiquetas(Set<Etiqueta> etiquetas) {
     this.etiquetas = etiquetas;
-  }
-
-  public String toString() {
-    return "Articulo{" +
-      "id=" + id +
-      ", titulo='" + titulo + '\'' +
-      ", cuerpo='" + cuerpo + '\'' +
-      ", autor=" + autor +
-      ", fecha=" + fecha +
-      ", comentarios=" + comentarios +
-      ", etiquetas=" + etiquetas +
-      '}';
   }
 }

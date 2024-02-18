@@ -9,6 +9,7 @@ import util.BaseController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -21,7 +22,7 @@ public class EtiquetaController extends BaseController {
   }
 
   public void listar(Context ctx) {
-    ArrayList<Etiqueta> etiquetas = etiquetaService.findAll();
+    List<Etiqueta> etiquetas = etiquetaService.findAll();
     Map<String, Object> modelo = new HashMap<>();
     modelo.put("etiquetas", etiquetas);
     ctx.render("/public/templates/articulos.html", modelo);
