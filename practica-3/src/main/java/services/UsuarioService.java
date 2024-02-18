@@ -1,11 +1,8 @@
 package services;
-
 import encapsulation.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import util.BaseServiceDatabase;
-
-
 import java.util.List;
 
 public class UsuarioService extends BaseServiceDatabase<Usuario> {
@@ -17,7 +14,9 @@ public class UsuarioService extends BaseServiceDatabase<Usuario> {
     usuario.setNombre("Administrador");
     usuario.setPassword("admin");
     usuario.setAdmin(true);
-    usuario.setAutor(true);Usuario usuario2 = new Usuario();
+    usuario.setAutor(true);
+
+    Usuario usuario2 = new Usuario();
     usuario2.setUsername("user");
     usuario2.setNombre("Usuario");
     usuario2.setPassword("user");
@@ -35,8 +34,6 @@ public class UsuarioService extends BaseServiceDatabase<Usuario> {
     this.create(usuario2);
     this.create(usuario3);
   }
-
-
 
   public Usuario find(String username) {
     return this.dbFind(username);

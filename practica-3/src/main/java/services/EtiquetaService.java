@@ -1,9 +1,6 @@
 package services;
-
-
 import encapsulation.Etiqueta;
 import util.BaseServiceDatabase;
-
 import java.util.*;
 
 public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
@@ -19,7 +16,6 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
     Etiqueta etiqueta3 = new Etiqueta();
     etiqueta3.setNombre("Java");
   }
-
 
   public Etiqueta find(String etiquetaId) {
     return this.dbFind(etiquetaId);
@@ -40,9 +36,6 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
   public boolean delete(String etiquetaId) {
     return this.dbRemove(etiquetaId);
   }
-
-
-
 
 
 //  public ArrayList<Etiqueta> insertFromString(String[] etiquetas) {
