@@ -32,6 +32,7 @@ public class UsuarioController extends BaseController {
 
   public void crear(Context ctx) {
     Usuario usuario = new Usuario();
+    usuario.setNombre(ctx.formParam("nombre"));
     usuario.setUsername(ctx.formParam("username"));
     usuario.setPassword(ctx.formParam("password"));
     usuario.setAdmin(ctx.formParam("admin") != null);
