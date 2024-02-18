@@ -46,6 +46,17 @@ public class ArticuloService {
     return articulo;
   }
 
+  public ArrayList<Articulo> findByEtiqueta(String nombre) {
+    ArrayList<Articulo> articulosByTag = new ArrayList<>();
+
+    for (Articulo a : articulos)
+      for (Etiqueta e : a.getEtiquetas())
+        if (e.getNombre().equals(nombre))
+          articulosByTag.add(a);
+
+    return articulosByTag;
+  }
+
   public Articulo insert(Articulo entity) {
     articulos.add(entity);
     return entity;

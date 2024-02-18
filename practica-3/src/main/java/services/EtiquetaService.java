@@ -20,7 +20,24 @@ public class EtiquetaService {
   }
 
   public Etiqueta findById(Long id) {
-    return null;
+    Etiqueta etiqueta = null;
+
+    for (Etiqueta e : etiquetas)
+      if (e.getId() == id)
+        etiqueta = e;
+
+    return etiqueta;
+  }
+
+  public String findNameById(Long id) {
+    Etiqueta etiqueta = null;
+
+    for (Etiqueta e : etiquetas)
+      if (e.getId() == id)
+        etiqueta = e;
+
+    assert etiqueta != null;
+    return etiqueta.getNombre();
   }
 
   public Etiqueta findByName(String name) {

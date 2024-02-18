@@ -24,18 +24,26 @@ public class ArticuloController extends BaseController {
     this.comentarioService = comentarioService;
   }
 
-public void listar(Context ctx) {
- ArrayList<Articulo> articulos = articuloService.findAll();
- ArrayList<Etiqueta> etiquetas = etiquetaService.findAll();
+  public void listar(Context ctx) {
+    ArrayList<Articulo> articulos = articuloService.findAll();
 
- Map<String, Object> modelo = new HashMap<>();
- modelo.put("articulos", articulos);
- modelo.put("etiquetas", etiquetas);
- ctx.render("/public/templates/articulos.html", modelo);
+    if (ctx.queryParam("tag") != null) {
+      long etiqueta = Long.parseLong(Objects.requireNonNull(ctx.queryParam("tag")));
+      if (etiqueta != 0)
+        articulos = articuloService.findByEtiqueta(etiquetaService.findNameById(etiqueta));
+    }
+
+   ArrayList<Etiqueta> etiquetas = etiquetaService.findAll();
+
+   Map<String, Object> modelo = new HashMap<>();
+   modelo.put("articulos", articulos);
+   modelo.put("etiquetas", etiquetas);
+   ctx.render("/public/templates/articulos.html", modelo);
   }
 
   public void listarUno(Context ctx) {
     Long id = Long.parseLong(ctx.pathParam("id"));
+
 
     Articulo articulo = articuloService.findById(id);
     Map<String, Object> modelo = new HashMap<>();
