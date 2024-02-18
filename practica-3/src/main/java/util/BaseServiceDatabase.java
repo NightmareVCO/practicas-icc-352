@@ -1,4 +1,4 @@
-package org.example.utils;
+package util;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import java.lang.reflect.Field;

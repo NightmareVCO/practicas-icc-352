@@ -1,9 +1,10 @@
-package org.example.controllers;
+package controllers;
 
+import encapsulation.Articulo;
+import encapsulation.Etiqueta;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.example.encapsulations.Etiqueta;
-import org.example.services.EtiquetaService;
+import services.EtiquetaService;
 import util.BaseController;
 
 import java.util.ArrayList;

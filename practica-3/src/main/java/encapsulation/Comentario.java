@@ -1,23 +1,11 @@
-package org.example.encapsulations;
+package encapsulation;
 
-
-// entidad
-public class Comentario { // implements Serializable
-
-  //id
-  // que se genere
+public class Comentario {
   private long id;
   private String comentario;
-
-  // @manyToOne, a que 1 usuario puede tener muchos comentarios
-  // el id del usuario
-  // @joinColumn, el nombre de la columna que se va a crear
   private Usuario autor;
-
-  // @manyToOne, a que 1 articulo puede tener muchos comentarios
   private Articulo articulo;
 
-  // se va
   public Comentario(long id, String comentario, Usuario autor, Articulo articulo) {
     this.id = id;
     this.comentario = comentario;

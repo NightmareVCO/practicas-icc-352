@@ -4,10 +4,10 @@
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>org.example.encapsulations.Articulo</class>
-        <class>org.example.encapsulations.Usuario</class>
-        <class>org.example.encapsulations.Comentario</class>
-        <class>org.example.encapsulations.Etiqueta</class>
+        <class>encapsulation.Articulo</class>
+        <class>encapsulation.Usuario</class>
+        <class>encapsulation.Comentario</class>
+        <class>encapsulation.Etiqueta</class>
 
         <properties>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test" />-->

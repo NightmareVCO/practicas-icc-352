@@ -1,4 +1,4 @@
-package org.example.services;
+package services;
 
 public class BootstrapService {
   public void startDb(){

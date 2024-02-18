@@ -1,13 +1,12 @@
-package org.example.controllers;
-
+package controllers;
+import encapsulation.Articulo;
+import encapsulation.Comentario;
+import encapsulation.Etiqueta;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import org.example.encapsulations.Articulo;
-import org.example.encapsulations.Comentario;
-import org.example.encapsulations.Etiqueta;
-import org.example.services.ArticuloService;
-import org.example.services.ComentarioService;
-import org.example.services.EtiquetaService;
+import services.ArticuloService;
+import services.ComentarioService;
+import services.EtiquetaService;
 import util.BaseController;
 
 import java.util.*;

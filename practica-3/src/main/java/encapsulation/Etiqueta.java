@@ -1,27 +1,12 @@
-package org.example.encapsulations;
+package encapsulation;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-import java.io.Serializable;
-
-@Entity
-public class Etiqueta implements Serializable {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Etiqueta {
   private long id;
   private String nombre;
 
   public Etiqueta(long id, String nombre) {
     this.id = id;
     this.nombre = nombre;
-  }
-
-  // Constructor vacío (bien)
-  public Etiqueta() {
-
   }
 
   public long getId() {

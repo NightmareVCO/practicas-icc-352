@@ -1,20 +1,19 @@
-package org.example.encapsulations;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import java.io.Serializable;
+package encapsulation;
 
-@Entity // Indica que la clase es una entidad
-public class Usuario implements Serializable { // Implementa la interfaz Serializable
-
-  @Id // Indica que el atributo es una clave primaria
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // Indica que el valor de la clave primaria es autogenerado
+public class Usuario {
   private String username;
   private String nombre;
   private String password;
   private boolean admin;
   private boolean autor;
+
+  public Usuario(String username, String nombre, String password, boolean admin, boolean autor) {
+    this.username = username;
+    this.nombre = nombre;
+    this.password = password;
+    this.admin = admin;
+    this.autor = autor;
+  }
 
   public String getUsername() {
     return username;
