@@ -38,7 +38,7 @@ public class AuthController extends BaseController {
 
     ctx.sessionAttribute("usuario", usuario);
      if(remember){
-       ctx.cookie("usuario", usuario.getUsername(), 7);
+       ctx.cookie("usuario", usuario.getUsername(), 604800);
      }
 
     ctx.redirect("/articulos");
@@ -46,6 +46,7 @@ public class AuthController extends BaseController {
 
   public void logout(Context ctx) {
     ctx.req().getSession().invalidate();
+    ctx.removeCookie("usuario");
     ctx.redirect("/");
   }
 
