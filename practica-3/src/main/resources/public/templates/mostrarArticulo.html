@@ -25,6 +25,7 @@
             <p th:each="e : ${articulo.etiquetas}"><span class="badge bg-secondary rounded-pill" th:text="${e.nombre}"></span></p>
           </div>
           <p><span th:text="${articulo.fecha}"></span></p>
+          <p><span th:text="'Autor: ' + ${articulo.autor.username}"></span></p>
         </div>
       </article>
 
@@ -41,7 +42,9 @@
             window.location.replace(responseURL);
           };
           xhttp.send();
-          window.location.replace("/articulos");
+          setTimeout(() => {
+            window.location.replace("/articulos");
+          }, 1000);
         }
       </script>
 
@@ -57,7 +60,7 @@
           </form>
 
           <div class="d-flex flex-column-reverse border border-1 border-secondary rounded-3 mb-4">
-            <div class="ms-3 mt-2" th:each="c : ${articulo.comentarios}">
+            <div class="ms-3 mt-2" th:each="c : ${comentarios}">
               <p class="m-0"><strong th:text="${c.autor.username}"></strong></p>
               <p class="text-break" th:text="${c.comentario}"></p>
             </div>
