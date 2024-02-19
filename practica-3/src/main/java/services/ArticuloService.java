@@ -18,6 +18,7 @@ public class ArticuloService extends BaseServiceDatabase<Articulo> {
   }
   public Articulo create(Articulo articulo){
     return this.dbCreate(articulo);
+
   }
   public Articulo modify(Articulo articulo){
     return this.dbModify(articulo);

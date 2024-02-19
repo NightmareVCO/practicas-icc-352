@@ -14,6 +14,7 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
 
   public Etiqueta findByName(String etiquetaName) {
     return this.findAll().stream().filter(e -> e.getNombre().equals(etiquetaName)).findFirst().orElse(null);
+
   }
 
   public List<Etiqueta> findAll() {
