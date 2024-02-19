@@ -2,21 +2,24 @@ package controllers;
 import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import services.AuthService;
 import services.UsuarioService;
 import util.BaseController;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class AuthController extends BaseController {
   private final UsuarioService usuarioService;
+  private final AuthService authService;
 
-  public AuthController(Javalin app, UsuarioService usuarioService) {
+  public AuthController(Javalin app, UsuarioService usuarioService, AuthService authService) {
     super(app);
     this.usuarioService = usuarioService;
+    this.authService = authService;
   }
 
   public void login(Context ctx) {
     if(ctx.cookie("usuario") != null){
-      Usuario usuario = usuarioService.findByUsername(ctx.cookie("usuario"));
+      Usuario usuario = usuarioService.findByUsername(authService.decryptText(ctx.cookie("usuario")));
       ctx.sessionAttribute("usuario", usuario);
       ctx.redirect("/articulos");
     }
@@ -43,7 +46,7 @@ public class AuthController extends BaseController {
 
     ctx.sessionAttribute("usuario", usuario);
      if(remember){
-       ctx.cookie("usuario", usuario.getUsername(), 604800);
+       ctx.cookie("usuario", authService.encryptText(usuario.getUsername()), 604800);
      }
 
     ctx.redirect("/articulos");
