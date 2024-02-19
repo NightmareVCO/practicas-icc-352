@@ -1,25 +1,29 @@
 package encapsulation;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
-public class Articulo {
+@Entity
+public class Articulo implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   private String titulo;
+  @Column(length = 1000)
   private String cuerpo;
+  @ManyToOne
   private Usuario autor;
   private Date fecha;
-  private ArrayList<Comentario> comentarios;
-  private ArrayList<Etiqueta> etiquetas;
+  @OneToMany(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
+  private List<Comentario> comentarios;
+  @ManyToMany(fetch = FetchType.EAGER)
+  private Set<Etiqueta> etiquetas;
 
-  public Articulo(long id, String titulo, String cuerpo, Usuario autor, Date fecha, ArrayList<Etiqueta> etiquetas) {
-    this.id = id;
-    this.titulo = titulo;
-    this.cuerpo = cuerpo;
-    this.autor = autor;
-    this.fecha = fecha;
-    this.etiquetas = etiquetas;
-    this.comentarios = new ArrayList<Comentario>();
-  }
 
   public long getId() {
     return id;
@@ -61,31 +65,19 @@ public class Articulo {
     this.fecha = fecha;
   }
 
-  public ArrayList<Comentario> getComentarios() {
+  public List<Comentario> getComentarios() {
     return comentarios;
   }
 
-  public void setComentarios(ArrayList<Comentario> comentarios) {
+  public void setComentarios(List<Comentario> comentarios) {
     this.comentarios = comentarios;
   }
 
-  public ArrayList<Etiqueta> getEtiquetas() {
+  public Set<Etiqueta> getEtiquetas() {
     return etiquetas;
   }
 
-  public void setEtiquetas(ArrayList<Etiqueta> etiquetas) {
+  public void setEtiquetas(Set<Etiqueta> etiquetas) {
     this.etiquetas = etiquetas;
-  }
-
-  public String toString() {
-    return "Articulo{" +
-      "id=" + id +
-      ", titulo='" + titulo + '\'' +
-      ", cuerpo='" + cuerpo + '\'' +
-      ", autor=" + autor +
-      ", fecha=" + fecha +
-      ", comentarios=" + comentarios +
-      ", etiquetas=" + etiquetas +
-      '}';
   }
 }

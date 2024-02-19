@@ -1,53 +1,27 @@
 package services;
-
 import encapsulation.Comentario;
+import util.BaseServiceDatabase;
+import java.util.List;
 
-import java.util.ArrayList;
-
-public class ComentarioService {
-
-  private final ArrayList<Comentario> comentarios;
+public class ComentarioService extends BaseServiceDatabase<Comentario> {
 
   public ComentarioService() {
-    this.comentarios = new ArrayList<>();
+      super(Comentario.class);
   }
 
-  public ArrayList<Comentario> findAll() {
-    return comentarios;
+  public Comentario find(String comentarioId) {
+    return this.dbFind(comentarioId);
   }
-
-  public Comentario findById(Long id) {
-    Comentario comentario = null;
-
-    for (Comentario c : comentarios)
-      if (c.getId() == id)
-        comentario = c;
-
-    return comentario;
+  public List<Comentario> findAll(){
+    return this.dbFindAll();
   }
-
-  public Comentario insert(Comentario entity) {
-    comentarios.add(entity);
-    return null;
+  public Comentario create(Comentario comentario){
+    return this.dbCreate(comentario);
   }
-
-  public Comentario update(Comentario entity) {
-    return null;
+  public Comentario modify(Comentario comentario){
+    return this.dbModify(comentario);
   }
-
-  public Comentario delete(Comentario entity) {
-    return null;
-  }
-
-  public Comentario deleteById(Long id) {
-    return null;
-  }
-
-  public Comentario deleteAll() {
-    return null;
-  }
-
-  public Long getNextId() {
-    return (long) (comentarios.size() + 1);
+  public boolean delete(String comentarioId){
+    return this.dbRemove(comentarioId);
   }
 }

@@ -1,17 +1,18 @@
 package encapsulation;
+import jakarta.persistence.*;
+import java.io.Serializable;
 
-public class Comentario {
+@Entity
+public class Comentario implements Serializable {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   private String comentario;
+  @ManyToOne
   private Usuario autor;
+  @ManyToOne
   private Articulo articulo;
-
-  public Comentario(long id, String comentario, Usuario autor, Articulo articulo) {
-    this.id = id;
-    this.comentario = comentario;
-    this.autor = autor;
-    this.articulo = articulo;
-  }
 
   public long getId() {
     return id;
@@ -35,5 +36,13 @@ public class Comentario {
 
   public void setAutor(Usuario autor) {
     this.autor = autor;
+  }
+
+  public Articulo getArticulo() {
+    return articulo;
+  }
+
+  public void setArticulo(Articulo articulo) {
+    this.articulo = articulo;
   }
 }

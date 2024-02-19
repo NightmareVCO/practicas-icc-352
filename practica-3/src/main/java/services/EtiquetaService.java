@@ -1,103 +1,61 @@
 package services;
-
 import encapsulation.Etiqueta;
-
+import util.BaseServiceDatabase;
 import java.util.*;
 
-public class EtiquetaService {
-
-  private final ArrayList<Etiqueta> etiquetas;
-
+public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
   public EtiquetaService() {
-    this.etiquetas = new ArrayList<>();
-    etiquetas.add(new Etiqueta(1L, "Cine"));
-    etiquetas.add(new Etiqueta(2L, "Medicina"));
-    etiquetas.add(new Etiqueta(3L, "Deportes"));
+    super(Etiqueta.class);
   }
 
-  public ArrayList<Etiqueta> findAll() {
-    return etiquetas;
+  public Etiqueta find(String etiquetaId) {
+    return this.dbFind(etiquetaId);
   }
 
-  public Etiqueta findById(Long id) {
-    Etiqueta etiqueta = null;
+  public Etiqueta findByName(String etiquetaName) {
+    return this.findAll().stream().filter(e -> e.getNombre().equals(etiquetaName)).findFirst().orElse(null);
 
-    for (Etiqueta e : etiquetas)
-      if (e.getId() == id)
-        etiqueta = e;
-
-    return etiqueta;
   }
 
-  public String findNameById(Long id) {
-    Etiqueta etiqueta = null;
-
-    for (Etiqueta e : etiquetas)
-      if (e.getId() == id)
-        etiqueta = e;
-
-    assert etiqueta != null;
-    return etiqueta.getNombre();
+  public List<Etiqueta> findAll() {
+    return this.dbFindAll();
   }
 
-  public Etiqueta findByName(String name) {
-    Etiqueta etiqueta = null;
-
-    for (Etiqueta e : etiquetas)
-      if (e.getNombre().equals(name))
-        etiqueta = e;
-
-    return etiqueta;
+  public Etiqueta create(Etiqueta etiqueta) {
+    return this.dbCreate(etiqueta);
   }
 
-  public Etiqueta insert(Etiqueta entity) {
-    return null;
+  public Etiqueta modify(Etiqueta etiqueta) {
+    return this.dbModify(etiqueta);
   }
 
-  public ArrayList<Etiqueta> insertFromString(String[] etiquetas) {
+  public boolean delete(String etiquetaId) {
+    return this.dbRemove(etiquetaId);
+  }
+
+
+  public Set<Etiqueta> insertFromString(String[] etiquetas) {
     String[] etiquetasLimpias = Arrays.stream(etiquetas).map(String::trim).toArray(String[]::new);
     Set<String> etiquetasSet = new HashSet<>(Arrays.asList(etiquetasLimpias));
-    ArrayList<Etiqueta> newEtiquetas = new ArrayList<>();
+    Set<Etiqueta> newEtiquetas = new HashSet<>();
 
     for (String etiquetaName : etiquetasSet) {
       Etiqueta e = this.findByName(etiquetaName);
-      if (e == null) this.etiquetas.add(new Etiqueta(this.getNextId(), etiquetaName));
+      Etiqueta newEtiqueta = new Etiqueta();
+      newEtiqueta.setNombre(etiquetaName);
+      if (e == null) this.create(newEtiqueta);
       newEtiquetas.add(this.findByName(etiquetaName));
     }
     return newEtiquetas;
   }
 
-  public String getEtiquetasString(ArrayList<Etiqueta> etiquetas) {
+  public String getEtiquetasString(Set<Etiqueta> etiquetas) {
     StringBuilder etiquetasString = new StringBuilder();
 
-    for (Etiqueta e : etiquetas) {
+    for (Etiqueta e : etiquetas)
       etiquetasString.append(e.getNombre()).append(",");
-    }
 
-    return etiquetasString.substring(0, etiquetasString.length() - 1);
+    return etiquetasString.substring(0, etiquetasString.length());
   }
 
-  public long getNextId() {
-    return this.etiquetas.size() + 1;
-  }
-
-  public Etiqueta getByIndex(int index) {
-    return this.etiquetas.get(index);
-  }
-
-  public Etiqueta update(Etiqueta entity) {
-    return null;
-  }
-
-  public Etiqueta delete(Etiqueta entity) {
-    return null;
-  }
-
-  public Etiqueta deleteById(Long id) {
-    return null;
-  }
-
-  public Etiqueta deleteAll() {
-    return null;
-  }
 }

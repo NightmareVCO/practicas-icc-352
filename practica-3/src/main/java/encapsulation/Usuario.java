@@ -1,19 +1,17 @@
 package encapsulation;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import java.io.Serializable;
 
-public class Usuario {
+@Entity
+public class Usuario implements Serializable {
+  @Id
   private String username;
   private String nombre;
   private String password;
   private boolean admin;
   private boolean autor;
-
-  public Usuario(String username, String nombre, String password, boolean admin, boolean autor) {
-    this.username = username;
-    this.nombre = nombre;
-    this.password = password;
-    this.admin = admin;
-    this.autor = autor;
-  }
+  private boolean active;
 
   public String getUsername() {
     return username;
@@ -55,13 +53,21 @@ public class Usuario {
     this.autor = autor;
   }
 
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
   public String toString() {
     return "Usuario{" +
-      "username='" + username + '\'' +
-      ", nombre='" + nombre + '\'' +
-      ", password='" + password + '\'' +
-      ", admin=" + admin +
-      ", autor=" + autor +
-      '}';
+            "username='" + username + '\'' +
+            ", nombre='" + nombre + '\'' +
+            ", password='" + password + '\'' +
+            ", admin=" + admin +
+            ", autor=" + autor +
+            '}';
   }
 }

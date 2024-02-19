@@ -24,71 +24,75 @@ public class ArticuloController extends BaseController {
     this.comentarioService = comentarioService;
   }
 
-  public void listar(Context ctx) {
-    ArrayList<Articulo> articulos = articuloService.findAll();
 
-    if (ctx.queryParam("tag") != null) {
+public void listar(Context ctx) {
+ List<Articulo> articulos = articuloService.findAll();
+      if (ctx.queryParam("tag") != null) {
       long etiqueta = Long.parseLong(Objects.requireNonNull(ctx.queryParam("tag")));
       if (etiqueta != 0)
         articulos = articuloService.findByEtiqueta(etiquetaService.findNameById(etiqueta));
     }
+ List<Etiqueta> etiquetas = etiquetaService.findAll();
 
-   ArrayList<Etiqueta> etiquetas = etiquetaService.findAll();
+ Map<String, Object> modelo = new HashMap<>();
+ modelo.put("articulos", articulos);
+ modelo.put("etiquetas", etiquetas);
+ ctx.render("/public/templates/articulos.html", modelo);
 
-   Map<String, Object> modelo = new HashMap<>();
-   modelo.put("articulos", articulos);
-   modelo.put("etiquetas", etiquetas);
-   ctx.render("/public/templates/articulos.html", modelo);
   }
 
   public void listarUno(Context ctx) {
     Long id = Long.parseLong(ctx.pathParam("id"));
 
+    Articulo articulo = articuloService.find(String.valueOf(id));
 
-    Articulo articulo = articuloService.findById(id);
     Map<String, Object> modelo = new HashMap<>();
 
     modelo.put("articulo", articulo);
     modelo.put("etiquetas", etiquetaService.getEtiquetasString(articulo.getEtiquetas()));
+    modelo.put("comentarios", articulo.getComentarios());
     ctx.render("/public/templates/mostrarArticulo.html", modelo);
   }
 
   public void crear(Context ctx) {
-   Articulo articulo = new Articulo(
-     articuloService.getNextId(),
-     ctx.formParam("titulo"),
-     ctx.formParam("contenido"),
-     Objects.requireNonNull(ctx.sessionAttribute("usuario")),
-      new Date(),
-     etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(","))
-   );
-   articuloService.insert(articulo);
+   Articulo articulo = new Articulo();
+    articulo.setTitulo(ctx.formParam("titulo"));
+    articulo.setCuerpo(ctx.formParam("contenido"));
+    articulo.setFecha(new Date());
+    articulo.setAutor(Objects.requireNonNull(ctx.sessionAttribute("usuario")));
+    articulo.setEtiquetas(etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
+
+   articuloService.create(articulo);
    ctx.redirect("/articulos");
   }
 
   public void editar(Context ctx) {
-    articuloService.update(Long.parseLong(ctx.pathParam("id")), ctx.formParam("contenido"), ctx.formParam("titulo"), etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
+    Articulo articulo = articuloService.find(String.valueOf(Long.parseLong(ctx.pathParam("id"))));
+    articulo.setTitulo(ctx.formParam("titulo"));
+    articulo.setCuerpo(ctx.formParam("contenido"));
+    articulo.setEtiquetas(etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
+    articuloService.modify(articulo);
     ctx.redirect("/articulos");
   }
 
   public void eliminar(Context ctx) {
-    Articulo articulo = articuloService.findById(Long.parseLong(ctx.pathParam("id")));
-    articuloService.delete(articulo);
+    Articulo articulo = articuloService.find(String.valueOf(Long.parseLong(ctx.pathParam("id"))));
+    articuloService.delete(String.valueOf(articulo.getId()));
     ctx.redirect("/articulos");
   }
   
   public void ingresarComentario(Context ctx) {
     long articuloId = Long.parseLong(ctx.pathParam("id"));
-    Articulo articulo = articuloService.findById(articuloId);
+    Articulo articulo = articuloService.find(String.valueOf(articuloId));
 
-    Comentario comentario = new Comentario(
-      comentarioService.getNextId(),
-      ctx.formParam("comentario"),
-      Objects.requireNonNull(ctx.sessionAttribute("usuario")),
-      articulo
-    );
-    comentarioService.insert(comentario);
+    Comentario comentario = new Comentario();
+    comentario.setComentario(ctx.formParam("comentario"));
+    comentario.setAutor(Objects.requireNonNull(ctx.sessionAttribute("usuario")));
+    comentario.setArticulo(articulo);
+
+    comentarioService.create(comentario);
     articulo.getComentarios().add(comentario); //malo, servicio debería hacer esto
+    articuloService.modify(articulo);
     ctx.redirect("/articulos/" + articuloId);
 
   }

@@ -3,6 +3,11 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.EtiquetaService;
 import util.BaseController;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 public class EtiquetaController extends BaseController {
@@ -13,9 +18,12 @@ public class EtiquetaController extends BaseController {
     this.etiquetaService = etiquetaService;
   }
 
-  public void listarByTag(Context ctx) {
-    String tag = ctx.queryParam("tag");
-    ctx.redirect("/articulos?tag=" + tag);
+  public void listar(Context ctx) {
+    List<Etiqueta> etiquetas = etiquetaService.findAll();
+    Map<String, Object> modelo = new HashMap<>();
+    modelo.put("etiquetas", etiquetas);
+    ctx.render("/public/templates/articulos.html", modelo);
+
   }
 
   public void crear(Context ctx) {

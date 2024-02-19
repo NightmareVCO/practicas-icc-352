@@ -1,63 +1,48 @@
 package services;
-
 import encapsulation.Usuario;
-import java.util.ArrayList;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import util.BaseServiceDatabase;
+import java.util.List;
 
-public class UsuarioService {
-
-  private final ArrayList<Usuario> usuarios;
+public class UsuarioService extends BaseServiceDatabase<Usuario> {
 
   public UsuarioService() {
-    this.usuarios = new ArrayList<>();
-    usuarios.add(new Usuario("admin", "vladimir", "admin", true, true));
-    usuarios.add(new Usuario("user", "user", "user", false, true));
-    usuarios.add(new Usuario("user2", "user2", "user2", false, false));
+    super(Usuario.class);
   }
 
-  public ArrayList<Usuario> findAll() {
-    return usuarios;
+  public Usuario find(String username) {
+    return this.dbFind(username);
   }
 
+  public List<Usuario> findAll() {
+    return this.dbFindAll();
+  }
+
+  public Usuario create(Usuario usuario) {
+    return this.dbCreate(usuario);
+  }
+
+  public Usuario modify(Usuario usuario) {
+    return this.dbModify(usuario);
+  }
+
+  public boolean delete(String username) {
+    return this.dbRemove(username);
+  }
+
+  public boolean checkPassword(String username, String password) {
+    Usuario usuario = this.find(username);
+    return usuario != null && usuario.getPassword().equals(password);
+  }
 
   public Usuario findByUsername(String username) {
-    Usuario usuario = null;
-
-    for (Usuario u : usuarios)
-      if (u.getUsername().equals(username))
-        usuario = u;
-
-    return usuario;
-  }
-
-  public boolean exists(String username) {
-    return findByUsername(username) !=  null;
-  }
-
-  public boolean checkPassword(Usuario usuario, String password) {
-    return usuario.getPassword().equals(password);
-  }
-
-  public Usuario findById(Long id) {
-    return null;
-  }
-  public Usuario insert(Usuario entity) {
-    usuarios.add(entity);
-    return entity;
-  }
-
-  public Usuario update(Usuario entity) {
-    return null;
-  }
-
-  public Usuario delete(Usuario entity) {
-    return null;
-  }
-
-  public Usuario deleteById(Long id) {
-    return null;
-  }
-
-  public Usuario deleteAll() {
-    return null;
+    try (EntityManager em = getEntityManager()) {
+      Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.username = :username");
+      query.setParameter("username", username);
+      return (Usuario) query.getSingleResult();
+    } catch (Exception e) {
+      return null;
+    }
   }
 }
