@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <script src="../assets/js/color-modes.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Usuaraio</title>
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="../css/headers.css" rel="stylesheet">
+</head>
+
+<body>
+<main>
+  <nav th:replace="~{/public/templates/fragments/navbar.html :: navbarFragment}"></nav>
+  <div th:replace="~{/public/templates/fragments/theme.html :: themeSwitch}"></div>
+
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <section th:if="${usuario}" class="d-flex flex-column w-75 justify-content-center align-items-center">
+      <article class="w-100">
+        <h1 class="text-center" th:text="${usuario.nombre}"></h1>
+        <strong>Username:</strong><p th:text="${usuario.username}"></p>
+        <strong>Admin: </strong><p th:text="${usuario.admin}"></p>
+        <strong>Autor: </strong><p th:text="${usuario.autor}"></p>
+        <strong>Activo: </strong><p th:text="${usuario.active}"></p>
+      </article>
+
+      <div th:if="${session.usuario} and (${session.usuario.admin})">
+        <button th:attr="usuario=${usuario.username}" onclick="sendDelete(this.getAttribute('usuario'))" class="btn btn-danger text-start">Eliminar</button>
+        <button class="btn btn-secondary text-start" data-bs-toggle="modal" data-bs-target="#usuario">Editar</button>
+      </div>
+      <script th:inline="javascript">
+        function sendDelete(url) {
+          const xhttp = new XMLHttpRequest();
+          xhttp.open("DELETE", url, true);
+          xhttp.onload = () => {
+            let responseURL = xhttp.responseURL;
+            window.location.replace(responseURL);
+          };
+          xhttp.send();
+          setTimeout(() => {
+            window.location.replace("/usuarios");
+          }, 1000);
+        }
+      </script>
+    </section>
+
+    <div class="end-0 p-4 text-center" >
+      <a href="/usuarios" class="btn btn-secondary">Back</a>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="usuario" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Usuario</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" th:action="'edit/' + ${usuario.username}">
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input name="nombre" type="text" class="form-control w-25" id="nombre" th:value="${usuario.nombre}" aria-describedby="nombreHelp" required>
+                <div id="nombreHelp" class="form-text">Nombre del usuario</div>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input name="password" type="password" class="form-control w-25" id="password" aria-describedby="passwordHelp" required>
+                <div id="passwordHelp" class="form-text">Password del usuario</div>
+              </div>
+              <div class="mb-3 form-check">
+                <input name="admin" type="checkbox" class="form-check-input" id="admin" th:checked="${usuario.admin}">
+                <label class="form-check-label" for="admin">Admin</label>
+              </div>
+              <div class="mb-3 form-check">
+                <input name="autor" type="checkbox" class="form-check-input" id="autor" th:checked="${usuario.autor}">
+                <label class="form-check-label" for="autor">Autor</label>
+              </div>
+<!--              <div class="mb-3 form-check">-->
+<!--                <input name="activo" type="checkbox" class="form-check-input" id="activo" th:checked="${usuario.active}">-->
+<!--                <label class="form-check-label" for="activo">Activo</label>-->
+<!--              </div>-->
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

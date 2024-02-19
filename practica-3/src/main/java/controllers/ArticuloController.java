@@ -27,8 +27,6 @@ public class ArticuloController extends BaseController {
 public void listar(Context ctx) {
  List<Articulo> articulos = articuloService.findAll();
  List<Etiqueta> etiquetas = etiquetaService.findAll();
-  System.out.println(articulos);
-  System.out.println(etiquetas);
 
  Map<String, Object> modelo = new HashMap<>();
  modelo.put("articulos", articulos);
@@ -43,12 +41,11 @@ public void listar(Context ctx) {
 
     modelo.put("articulo", articulo);
     modelo.put("etiquetas", etiquetaService.getEtiquetasString(articulo.getEtiquetas()));
+    modelo.put("comentarios", articulo.getComentarios());
     ctx.render("/public/templates/mostrarArticulo.html", modelo);
   }
 
   public void crear(Context ctx) {
-
-
    Articulo articulo = new Articulo();
     articulo.setTitulo(ctx.formParam("titulo"));
     articulo.setCuerpo(ctx.formParam("contenido"));

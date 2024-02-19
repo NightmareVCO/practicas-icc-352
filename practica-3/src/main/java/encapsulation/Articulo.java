@@ -19,9 +19,9 @@ public class Articulo implements Serializable {
   @ManyToOne
   private Usuario autor;
   private Date fecha;
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
   private List<Comentario> comentarios;
-  @OneToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER)
   private Set<Etiqueta> etiquetas;
 
 
