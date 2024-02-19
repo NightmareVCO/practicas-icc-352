@@ -5,13 +5,13 @@ import java.io.Serializable;
 
 @Entity
 public class Usuario implements Serializable {
-
   @Id
   private String username;
   private String nombre;
   private String password;
   private boolean admin;
   private boolean autor;
+  private boolean active;
 
   public String getUsername() {
     return username;
@@ -51,6 +51,14 @@ public class Usuario implements Serializable {
 
   public void setAutor(boolean autor) {
     this.autor = autor;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 
   public String toString() {
