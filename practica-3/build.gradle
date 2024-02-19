@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
     implementation "org.hibernate.orm:hibernate-core:6.4.4.Final"
     implementation 'com.h2database:h2:2.1.214'
+    implementation 'org.jasypt:jasypt:1.9.3'
 }
 
 test {
