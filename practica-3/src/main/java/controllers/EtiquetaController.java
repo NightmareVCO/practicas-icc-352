@@ -1,13 +1,12 @@
 package controllers;
+import encapsulation.Etiqueta;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.EtiquetaService;
 import util.BaseController;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 public class EtiquetaController extends BaseController {
@@ -23,7 +22,10 @@ public class EtiquetaController extends BaseController {
     Map<String, Object> modelo = new HashMap<>();
     modelo.put("etiquetas", etiquetas);
     ctx.render("/public/templates/articulos.html", modelo);
+  }
 
+  public void listarByTag(Context ctx) {
+   ctx.redirect("/articulos?tag=" + ctx.queryParam("tag"));
   }
 
   public void crear(Context ctx) {

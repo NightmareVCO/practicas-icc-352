@@ -1,14 +1,11 @@
 package controllers;
-
 import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import io.javalin.http.Cookie;
 import services.UsuarioService;
 import util.BaseController;
-
-
 import static io.javalin.apibuilder.ApiBuilder.*;
+
 public class AuthController extends BaseController {
   private final UsuarioService usuarioService;
 

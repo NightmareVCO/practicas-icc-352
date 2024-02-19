@@ -1,14 +1,12 @@
 package controllers;
-
-import encapsulation.Articulo;
-import encapsulation.Etiqueta;
 import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.UsuarioService;
 import util.BaseController;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 

@@ -2,7 +2,6 @@ package encapsulation;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.io.Serializable;
-
 @Entity
 public class Usuario implements Serializable {
   @Id

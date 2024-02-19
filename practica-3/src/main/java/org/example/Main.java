@@ -15,7 +15,6 @@ import java.util.Set;
 public class Main {
   public static void main(String[] args) {
     Javalin app = Javalin.create(config ->{
-      //configurando los documentos estaticos.
       config.staticFiles.add(staticFileConfig -> {
         staticFileConfig.hostedPath = "/";
         staticFileConfig.directory = "/public";
@@ -35,6 +34,19 @@ public class Main {
     UsuarioService usuarioService = new UsuarioService();
 
     //------------------------------------CREATION------------------------------//
+    addInfo(usuarioService, etiquetaService, articuloService, comentarioService);
+    //--------------------------------------------------------------------------//
+
+    new ArticuloController(app, articuloService, etiquetaService, comentarioService).applyRoutes();
+    new ComentarioController(app, comentarioService).applyRoutes();
+    new EtiquetaController(app, etiquetaService).applyRoutes();
+    new UsuarioController(app, usuarioService).applyRoutes();
+    new AuthController(app, usuarioService).applyRoutes();
+
+    app.get("/", ctx -> ctx.redirect("/articulos"));
+  }
+
+  public static void addInfo(UsuarioService usuarioService, EtiquetaService etiquetaService, ArticuloService articuloService, ComentarioService comentarioService) {
     Usuario usuario = new Usuario();
     usuario.setUsername("admin");
     usuario.setNombre("Administrador");
@@ -68,8 +80,6 @@ public class Main {
     usuarioService.create(usuario3);
     usuarioService.create(usuario4);
 
-
-
     Etiqueta etiqueta = new Etiqueta();
     etiqueta.setNombre("Movies");
     Etiqueta etiqueta2 = new Etiqueta();
@@ -83,19 +93,19 @@ public class Main {
     Articulo articulo = new Articulo();
     articulo.setTitulo("Cookies");
     articulo.setCuerpo("El manejo de cookies y sesiones en una aplicación web es una tarea fundamental que recae principalmente en el backend. Las cookies, pequeños fragmentos de datos almacenados en el navegador del usuario, son esenciales para mantener el estado de la sesión, gestionar la autenticación y personalizar la experiencia del usuario. Por otro lado, las sesiones, administradas por el servidor, permiten mantener la continuidad de la interacción entre el usuario y la aplicación a lo largo de múltiples solicitudes. A través de una combinación efectiva de cookies y sesiones, se logra una experiencia de usuario coherente y segura en la web.");
-    articulo.setEtiquetas(Set.of(etiqueta, etiqueta2, etiqueta3));
+    articulo.setEtiquetas(Set.of(etiqueta));
     articulo.setAutor(usuario);
     articulo.setFecha(new java.util.Date());
     Articulo articulo2 = new Articulo();
     articulo2.setTitulo("Javalin");
     articulo2.setCuerpo("Javalin es un framework ligero y fácil de usar para el desarrollo de aplicaciones web y API REST en Java. Con una sintaxis sencilla y una API intuitiva, Javalin permite a los desarrolladores crear rápidamente servicios web robustos y escalables. Ofrece características como enrutamiento dinámico, manejo de solicitudes HTTP, gestión de sesiones, soporte para WebSockets y un sistema de plugins extensible. Además, Javalin es altamente adaptable y se integra fácilmente con otras tecnologías y bibliotecas Java, lo que lo convierte en una opción popular para desarrolladores que buscan una solución eficiente y moderna para sus proyectos web.");
-    articulo2.setEtiquetas(Set.of(etiqueta, etiqueta2, etiqueta3));
+    articulo2.setEtiquetas(Set.of(etiqueta2));
     articulo2.setAutor(usuario2);
     articulo2.setFecha(new java.util.Date());
     Articulo articulo3 = new Articulo();
     articulo3.setTitulo("NestJS");
     articulo3.setCuerpo("NestJS es un framework de desarrollo de aplicaciones web progresivas y servidores de API Node.js que utiliza TypeScript como su lenguaje principal. Construido con una arquitectura modular y basada en inyección de dependencias, NestJS proporciona una estructura sólida para construir aplicaciones escalables y mantenibles. Ofrece una amplia gama de características, incluyendo enrutamiento basado en controladores, middleware, validación de datos, gestión de solicitudes HTTP, integración con bases de datos, soporte para WebSockets y más. Además, su ecosistema está respaldado por una comunidad activa y una documentación exhaustiva, lo que lo convierte en una opción atractiva para desarrolladores que buscan una solución moderna y eficiente para sus proyectos Node.js.");
-    articulo3.setEtiquetas(Set.of(etiqueta, etiqueta2, etiqueta3));
+    articulo3.setEtiquetas(Set.of(etiqueta3));
     articulo3.setAutor(usuario3);
     articulo3.setFecha(new java.util.Date());
     articuloService.create(articulo);
@@ -124,14 +134,5 @@ public class Main {
     articuloService.modify(articulo2);
     articulo.setComentarios(List.of(comentario));
     articuloService.modify(articulo);
-    //--------------------------------------------------------------------------//
-
-    new ArticuloController(app, articuloService, etiquetaService, comentarioService).applyRoutes();
-    new ComentarioController(app, comentarioService).applyRoutes();
-    new EtiquetaController(app, etiquetaService).applyRoutes();
-    new UsuarioController(app, usuarioService).applyRoutes();
-    new AuthController(app, usuarioService).applyRoutes();
-
-    app.get("/", ctx -> ctx.redirect("/articulos"));
   }
 }

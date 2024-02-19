@@ -1,5 +1,4 @@
 package services;
-
 public class BootstrapService {
   public void startDb(){
     try {

@@ -27,11 +27,12 @@ public class ArticuloController extends BaseController {
 
 public void listar(Context ctx) {
  List<Articulo> articulos = articuloService.findAll();
-      if (ctx.queryParam("tag") != null) {
-      long etiqueta = Long.parseLong(Objects.requireNonNull(ctx.queryParam("tag")));
-      if (etiqueta != 0)
-        articulos = articuloService.findByEtiqueta(etiquetaService.findNameById(etiqueta));
-    }
+
+  if(ctx.queryParam("tag") != null) {
+    Etiqueta etiqueta = etiquetaService.find(ctx.queryParam("tag"));
+    if (etiqueta != null)
+      articulos = articuloService.findByEtiqueta(etiqueta.getNombre());
+  }
  List<Etiqueta> etiquetas = etiquetaService.findAll();
 
  Map<String, Object> modelo = new HashMap<>();

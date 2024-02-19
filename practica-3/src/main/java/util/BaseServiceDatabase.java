@@ -3,11 +3,9 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaQuery;
 import java.lang.reflect.Field;
 import java.util.List;
-
 public class BaseServiceDatabase<T> {
   private static EntityManagerFactory emf;
   private final Class<T> claseEntidad;
-
   public BaseServiceDatabase(Class<T> claseEntidad) {
     emf = Persistence.createEntityManagerFactory("UnidadPersistencia");
     this.claseEntidad = claseEntidad;
@@ -16,7 +14,6 @@ public class BaseServiceDatabase<T> {
   public EntityManager getEntityManager(){
     return emf.createEntityManager();
   }
-
   private Object getIdValue(T entidad){
     if(entidad == null)
       return null;
@@ -36,7 +33,6 @@ public class BaseServiceDatabase<T> {
     }
     return null;
   }
-
   public T dbFind(Object id)  {
     try (EntityManager em = getEntityManager()) {
       return em.find(claseEntidad, id);
@@ -45,7 +41,6 @@ public class BaseServiceDatabase<T> {
       return null;
     }
   }
-
   public List<T> dbFindAll() {
     try (EntityManager em = getEntityManager()) {
       CriteriaQuery<T> criteriaQuery = em.getCriteriaBuilder().createQuery(claseEntidad);
@@ -68,7 +63,6 @@ public class BaseServiceDatabase<T> {
     }
     return entidad;
   }
-
   public T dbModify(T entidad){
     try (EntityManager em = getEntityManager()){
       em.getTransaction().begin();
@@ -80,7 +74,6 @@ public class BaseServiceDatabase<T> {
     }
     return entidad;
   }
-
   public boolean dbRemove(Object entidadId){
     try (EntityManager em = getEntityManager();) {
       em.getTransaction().begin();
@@ -93,5 +86,4 @@ public class BaseServiceDatabase<T> {
     }
     return true;
   }
-
 }

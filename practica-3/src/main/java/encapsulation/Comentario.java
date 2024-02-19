@@ -1,7 +1,6 @@
 package encapsulation;
 import jakarta.persistence.*;
 import java.io.Serializable;
-
 @Entity
 public class Comentario implements Serializable {
 

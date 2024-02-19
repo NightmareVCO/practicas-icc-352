@@ -1,14 +1,10 @@
 package controllers;
-
 import encapsulation.Comentario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.ComentarioService;
 import util.BaseController;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class ComentarioController extends BaseController {

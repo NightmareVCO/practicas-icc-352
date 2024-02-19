@@ -14,7 +14,6 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
 
   public Etiqueta findByName(String etiquetaName) {
     return this.findAll().stream().filter(e -> e.getNombre().equals(etiquetaName)).findFirst().orElse(null);
-
   }
 
   public List<Etiqueta> findAll() {
@@ -33,7 +32,6 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
     return this.dbRemove(etiquetaId);
   }
 
-
   public Set<Etiqueta> insertFromString(String[] etiquetas) {
     String[] etiquetasLimpias = Arrays.stream(etiquetas).map(String::trim).toArray(String[]::new);
     Set<String> etiquetasSet = new HashSet<>(Arrays.asList(etiquetasLimpias));
@@ -48,7 +46,6 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
     }
     return newEtiquetas;
   }
-
   public String getEtiquetasString(Set<Etiqueta> etiquetas) {
     StringBuilder etiquetasString = new StringBuilder();
 

@@ -4,11 +4,9 @@ import util.BaseServiceDatabase;
 import java.util.List;
 
 public class ComentarioService extends BaseServiceDatabase<Comentario> {
-
   public ComentarioService() {
       super(Comentario.class);
   }
-
   public Comentario find(String comentarioId) {
     return this.dbFind(comentarioId);
   }
