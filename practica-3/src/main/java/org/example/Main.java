@@ -46,7 +46,7 @@ public class Main {
     new UsuarioController(app, usuarioService).applyRoutes();
     new AuthController(app, usuarioService, authService).applyRoutes();
 
-    app.get("/", ctx -> ctx.redirect("/articulos"));
+    app.get("/", ctx -> ctx.redirect("/articulos?page=1"));
   }
 
   public static void addInfo(UsuarioService usuarioService, EtiquetaService etiquetaService, ArticuloService articuloService, ComentarioService comentarioService) {

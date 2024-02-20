@@ -10,7 +10,7 @@
     </div>
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
       <li><a href="/" class="nav-link px-2">Home</a></li>
-      <li><a href="/articulos" class="nav-link px-2">Articulos</a></li>
+      <li><a href="/articulos?page=1" class="nav-link px-2">Articulos</a></li>
       <li th:if="${session.usuario}"><a href="/usuarios" th:if="${session.usuario.admin}" class="nav-link px-2">Usuarios</a></li>
     </ul>
 
