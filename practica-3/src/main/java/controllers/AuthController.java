@@ -3,6 +3,7 @@ import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.AuthService;
+import services.CockraochService;
 import services.UsuarioService;
 import util.BaseController;
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -10,17 +11,20 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 public class AuthController extends BaseController {
   private final UsuarioService usuarioService;
   private final AuthService authService;
+  private final CockraochService cockraochService;
 
-  public AuthController(Javalin app, UsuarioService usuarioService, AuthService authService) {
+  public AuthController(Javalin app, UsuarioService usuarioService, AuthService authService, CockraochService cockraochService) {
     super(app);
     this.usuarioService = usuarioService;
     this.authService = authService;
+    this.cockraochService = cockraochService;
   }
 
   public void login(Context ctx) {
     if(ctx.cookie("usuario") != null){
       Usuario usuario = usuarioService.findByUsername(authService.decryptText(ctx.cookie("usuario")));
       ctx.sessionAttribute("usuario", usuario);
+      cockraochService.addLog(usuario.getUsername());
       ctx.redirect("/articulos?page=1");
     }
 
@@ -49,6 +53,7 @@ public class AuthController extends BaseController {
        ctx.cookie("usuario", authService.encryptText(usuario.getUsername()), 604800);
      }
 
+    cockraochService.addLog(username);
     ctx.redirect("/articulos?page=1");
   }
 

@@ -8,6 +8,7 @@ import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.jasypt.util.text.BasicTextEncryptor;
+import org.postgresql.ds.PGSimpleDataSource;
 import services.*;
 
 import java.util.List;
@@ -29,12 +30,15 @@ public class Main {
     BootstrapService bootstrapService = new BootstrapService();
     bootstrapService.startDb();
     BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+    PGSimpleDataSource ds = new PGSimpleDataSource();
 
     ArticuloService articuloService = new ArticuloService();
     ComentarioService comentarioService = new ComentarioService();
     EtiquetaService etiquetaService = new EtiquetaService();
     UsuarioService usuarioService = new UsuarioService();
     AuthService authService = new AuthService(textEncryptor);
+    CockraochService cockraochService = new CockraochService(ds);
+    cockraochService.init();
 
     //------------------------------------CREATION------------------------------//
     addInfo(usuarioService, etiquetaService, articuloService, comentarioService);
@@ -44,7 +48,7 @@ public class Main {
     new ComentarioController(app, comentarioService).applyRoutes();
     new EtiquetaController(app, etiquetaService).applyRoutes();
     new UsuarioController(app, usuarioService).applyRoutes();
-    new AuthController(app, usuarioService, authService).applyRoutes();
+    new AuthController(app, usuarioService, authService, cockraochService).applyRoutes();
 
     app.get("/", ctx -> ctx.redirect("/articulos?page=1"));
   }
