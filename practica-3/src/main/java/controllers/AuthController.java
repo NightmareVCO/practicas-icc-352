@@ -21,7 +21,7 @@ public class AuthController extends BaseController {
     if(ctx.cookie("usuario") != null){
       Usuario usuario = usuarioService.findByUsername(authService.decryptText(ctx.cookie("usuario")));
       ctx.sessionAttribute("usuario", usuario);
-      ctx.redirect("/articulos");
+      ctx.redirect("/articulos?page=1");
     }
 
     ctx.render("/public/templates/login.html");
@@ -49,7 +49,7 @@ public class AuthController extends BaseController {
        ctx.cookie("usuario", authService.encryptText(usuario.getUsername()), 604800);
      }
 
-    ctx.redirect("/articulos");
+    ctx.redirect("/articulos?page=1");
   }
 
   public void logout(Context ctx) {

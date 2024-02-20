@@ -24,20 +24,60 @@ public class ArticuloController extends BaseController {
     this.comentarioService = comentarioService;
   }
 
+  public void validarPaginas(Context ctx) {
+    if(ctx.queryParam("page") != null) {
+      if(Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page"))) < 1)
+        if (ctx.queryParam("tag") == null)
+          ctx.redirect("/articulos?page=1");
+        else
+          ctx.redirect("/articulos?page=1" + "&tag=" + ctx.queryParam("tag"));
+    }
+  }
+
+  public void validarTag(Context ctx) {
+    if(Objects.equals(ctx.queryParam("tag"), "null")){
+      ctx.redirect("/articulos?page=" + ctx.queryParam("page"));
+    }
+  }
 
 public void listar(Context ctx) {
- List<Articulo> articulos = articuloService.findAll();
+ List<Articulo> articulos = new ArrayList<>();
+ int pageSize = articuloService.getPageSize();
+ int totalPage = 1;
 
-  if(ctx.queryParam("tag") != null) {
-    Etiqueta etiqueta = etiquetaService.find(ctx.queryParam("tag"));
-    if (etiqueta != null)
-      articulos = articuloService.findByEtiqueta(etiqueta.getNombre());
+  if(ctx.queryParam("page") != null) {
+    int page = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page")));
+
+    if(ctx.queryParam("tag") != null){
+      Etiqueta etiqueta = etiquetaService.find(ctx.queryParam("tag"));
+      if (etiqueta != null){
+        articulos = articuloService.findAllByPageAndTag(page, pageSize, etiqueta.getNombre());
+        totalPage = (int)Math.ceil((double) articuloService.manyArticlesByTag(etiqueta.getNombre()) / articuloService.getPageSize());
+        int currentPage = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page")));
+        if(currentPage < 1)
+          ctx.redirect("/articulos?page=" + totalPage + "&tag=" + etiqueta.getId());
+        else if(currentPage > totalPage)
+          ctx.redirect("/articulos?page=1&tag=" + etiqueta.getId());
+      }
+    }else{
+      totalPage = (int)Math.ceil((double)articuloService.getAritculosSize() / articuloService.getPageSize());
+      int currentPage = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page")));
+      if(currentPage < 1)
+        ctx.redirect("/articulos?page=" + totalPage);
+      else if(currentPage > totalPage)
+        ctx.redirect("/articulos?page=1");
+
+      articulos = articuloService.findAllByPage(page, pageSize);
+    }
   }
- List<Etiqueta> etiquetas = etiquetaService.findAll();
 
+ List<Etiqueta> etiquetas = etiquetaService.findAll();
  Map<String, Object> modelo = new HashMap<>();
  modelo.put("articulos", articulos);
  modelo.put("etiquetas", etiquetas);
+ modelo.put("page", Integer.valueOf(Objects.requireNonNull(ctx.queryParam("page"))));
+ modelo.put("totalPage", totalPage);
+ modelo.put("tag", ctx.queryParam("tag"));
  ctx.render("/public/templates/articulos.html", modelo);
 
   }
@@ -64,7 +104,7 @@ public void listar(Context ctx) {
     articulo.setEtiquetas(etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
 
    articuloService.create(articulo);
-   ctx.redirect("/articulos");
+   ctx.redirect("/articulos?page=1");
   }
 
   public void editar(Context ctx) {
@@ -73,13 +113,13 @@ public void listar(Context ctx) {
     articulo.setCuerpo(ctx.formParam("contenido"));
     articulo.setEtiquetas(etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
     articuloService.modify(articulo);
-    ctx.redirect("/articulos");
+    ctx.redirect("/articulos?page=1");
   }
 
   public void eliminar(Context ctx) {
     Articulo articulo = articuloService.find(String.valueOf(Long.parseLong(ctx.pathParam("id"))));
     articuloService.delete(String.valueOf(articulo.getId()));
-    ctx.redirect("/articulos");
+    ctx.redirect("/articulos?page=1");
   }
   
   public void ingresarComentario(Context ctx) {
@@ -101,6 +141,8 @@ public void listar(Context ctx) {
   @Override
   public void applyRoutes() {
     app.routes(() -> path("/articulos", () -> {
+      before("/", this::validarPaginas);
+      before("/", this::validarTag);
       get("/", this::listar);
       get("/{id}", this::listarUno);
       post("/edit/{id}", this::editar);

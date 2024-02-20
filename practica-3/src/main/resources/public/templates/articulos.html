@@ -52,6 +52,19 @@
     </aside>
   </section>
 
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" th:href="@{'/articulos?page=' + ${page - 1} + '&tag=' + ${tag}}">Previous</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" th:href="@{'/articulos?page=' + ${page + 1} + '&tag=' + ${tag}}">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
   <div th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})"  class="end-0 p-4 text-center">
     <button type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articulo">Crear Articulo</button>
   </div>

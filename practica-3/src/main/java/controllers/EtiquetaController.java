@@ -25,7 +25,7 @@ public class EtiquetaController extends BaseController {
   }
 
   public void listarByTag(Context ctx) {
-   ctx.redirect("/articulos?tag=" + ctx.queryParam("tag"));
+   ctx.redirect("/articulos?page=1&tag=" + ctx.queryParam("tag"));
   }
 
   public void crear(Context ctx) {

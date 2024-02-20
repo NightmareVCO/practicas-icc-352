@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
-public class UsuarioController extends BaseController {
+public class  UsuarioController extends BaseController {
   private final UsuarioService usuarioService;
 
   public UsuarioController(Javalin app, UsuarioService usuarioService) {
