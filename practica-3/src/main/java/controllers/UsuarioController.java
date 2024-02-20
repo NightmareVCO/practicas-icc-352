@@ -1,10 +1,16 @@
 package controllers;
+import encapsulation.Foto;
 import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.UploadedFile;
 import services.CockraochService;
+import services.FotoService;
 import services.UsuarioService;
 import util.BaseController;
+
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +19,12 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class  UsuarioController extends BaseController {
   private final UsuarioService usuarioService;
+  private final FotoService fotoService;
 
-  public UsuarioController(Javalin app, UsuarioService usuarioService) {
+  public UsuarioController(Javalin app, UsuarioService usuarioService, FotoService fotoService) {
     super(app);
     this.usuarioService = usuarioService;
+    this.fotoService = fotoService;
   }
 
   public void listar(Context ctx) {
@@ -35,6 +43,7 @@ public class  UsuarioController extends BaseController {
     Usuario usuario = usuarioService.find(username);
     Map<String, Object> modelo = new HashMap<>();
     modelo.put("usuario", usuario);
+    modelo.put("foto", usuario.getFoto() != null ? usuario.getFoto() : null);
     ctx.render("/public/templates/mostrarUsuario.html", modelo);
   }
 
@@ -52,6 +61,17 @@ public class  UsuarioController extends BaseController {
       return;
     }
 
+    UploadedFile file = ctx.uploadedFile("foto");
+    Foto foto = null;
+    try {
+      byte[] bytes = file.content().readAllBytes();
+      String encodedString = Base64.getEncoder().encodeToString(bytes);
+      foto = new Foto(file.filename(), file.contentType(), encodedString);
+      fotoService.create(foto);
+      usuario.setFoto(foto);
+    }catch (Exception e){
+      e.printStackTrace();
+    }
     usuarioService.create(usuario);
     ctx.redirect("/usuarios");
   }

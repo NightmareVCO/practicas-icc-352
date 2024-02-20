@@ -36,6 +36,7 @@ public class Main {
     ComentarioService comentarioService = new ComentarioService();
     EtiquetaService etiquetaService = new EtiquetaService();
     UsuarioService usuarioService = new UsuarioService();
+    FotoService fotoService = new FotoService();
     AuthService authService = new AuthService(textEncryptor);
     CockraochService cockraochService = new CockraochService(ds);
     cockraochService.init();
@@ -47,7 +48,7 @@ public class Main {
     new ArticuloController(app, articuloService, etiquetaService, comentarioService).applyRoutes();
     new ComentarioController(app, comentarioService).applyRoutes();
     new EtiquetaController(app, etiquetaService).applyRoutes();
-    new UsuarioController(app, usuarioService).applyRoutes();
+    new UsuarioController(app, usuarioService, fotoService).applyRoutes();
     new AuthController(app, usuarioService, authService, cockraochService).applyRoutes();
 
     app.get("/", ctx -> ctx.redirect("/articulos?page=1"));
