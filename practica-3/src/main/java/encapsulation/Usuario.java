@@ -1,6 +1,6 @@
 package encapsulation;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 @Entity
 public class Usuario implements Serializable {
@@ -11,6 +11,8 @@ public class Usuario implements Serializable {
   private boolean admin;
   private boolean autor;
   private boolean active;
+  @OneToOne()
+  private Foto foto;
 
   public String getUsername() {
     return username;
@@ -58,6 +60,14 @@ public class Usuario implements Serializable {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public Foto getFoto() {
+    return foto;
+  }
+
+  public void setFoto(Foto foto) {
+    this.foto = foto;
   }
 
   public String toString() {

@@ -18,6 +18,10 @@
   <div class="d-flex flex-column justify-content-center align-items-center">
     <section th:if="${usuario}" class="d-flex flex-column w-75 justify-content-center align-items-center">
       <article class="w-100">
+        <span th:if="${usuario.foto != null}" class="d-flex justify-content-center align-items-center">
+          <img th:src="@{'data:'+${foto.getMimeType()}+';base64,'+${foto.getFotoBase64()}}"
+                 class="card-img-top" alt="Foto de perfil" id="foto" style="width: 200px; height: 200px;">
+        </span>
         <h1 class="text-center" th:text="${usuario.nombre}"></h1>
         <strong>Username:</strong><p th:text="${usuario.username}"></p>
         <strong>Admin: </strong><p th:text="${usuario.admin}"></p>

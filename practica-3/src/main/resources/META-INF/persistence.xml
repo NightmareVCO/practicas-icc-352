@@ -8,6 +8,7 @@
         <class>encapsulation.Usuario</class>
         <class>encapsulation.Comentario</class>
         <class>encapsulation.Etiqueta</class>
+        <class>encapsulation.Foto</class>
 
         <properties>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test" />-->
