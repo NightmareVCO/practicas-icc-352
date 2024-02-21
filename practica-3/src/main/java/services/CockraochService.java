@@ -36,9 +36,8 @@ public class CockraochService {
       rs.close();
       st.close();
     }
-    catch(Exception e)
-    {
-      return;
+    catch(Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -48,10 +47,8 @@ public class CockraochService {
       String stmt = "INSERT INTO usuarioLog (username, date) VALUES ('" + username + "', NOW())";
       executeStmt(conn, stmt);
     }
-    catch(Exception e)
-    {
+    catch(Exception e) {
       e.printStackTrace();
-      return;
     }
   }
 
@@ -67,10 +64,8 @@ public class CockraochService {
       }
       conn.close();
     }
-    catch(Exception e)
-    {
+    catch(Exception e) {
       e.printStackTrace();
-      return;
     }
   }
 }
