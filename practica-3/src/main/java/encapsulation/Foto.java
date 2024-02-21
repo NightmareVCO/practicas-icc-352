@@ -1,5 +1,4 @@
 package encapsulation;
-
 import jakarta.persistence.*;
 import java.io.Serializable;
 
@@ -14,12 +13,6 @@ public class Foto implements Serializable {
   private String fotoBase64;
 
   public Foto() {
-  }
-
-  public Foto(String nombre, String mimeType, String fotoBase64){
-    this.nombre = nombre;
-    this.mimeType = mimeType;
-    this.fotoBase64 = fotoBase64;
   }
 
   public Long getId() {

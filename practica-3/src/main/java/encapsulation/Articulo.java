@@ -1,6 +1,7 @@
 package encapsulation;
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,9 @@ public class Articulo implements Serializable {
   @ManyToMany(fetch = FetchType.EAGER)
   private Set<Etiqueta> etiquetas;
 
+  public Articulo() {
+    this.comentarios = new ArrayList<>();
+  }
 
   public long getId() {
     return id;

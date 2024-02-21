@@ -21,14 +21,18 @@ public class AuthController extends BaseController {
   }
 
   public void login(Context ctx) {
-    if(ctx.cookie("usuario") != null){
-      Usuario usuario = usuarioService.findByUsername(authService.decryptText(ctx.cookie("usuario")));
-      ctx.sessionAttribute("usuario", usuario);
-      cockraochService.addLog(usuario.getUsername());
-      ctx.redirect("/articulos?page=1");
+    String usuarioEncryptado = ctx.cookie("usuario");
+    if (usuarioEncryptado == null) {
+      ctx.render("/public/templates/login.html");
+      return;
     }
 
-    ctx.render("/public/templates/login.html");
+    String username = authService.decryptText(usuarioEncryptado);
+    Usuario usuarioEnCookie = usuarioService.findByUsername(username);
+    ctx.sessionAttribute("usuario", usuarioEnCookie);
+    cockraochService.addLog(usuarioEnCookie.getUsername());
+
+    ctx.redirect("/articulos?page=1");
   }
 
   public void checkLogin(Context ctx) {
@@ -49,11 +53,10 @@ public class AuthController extends BaseController {
     }
 
     ctx.sessionAttribute("usuario", usuario);
-     if(remember){
+     if(remember)
        ctx.cookie("usuario", authService.encryptText(usuario.getUsername()), 604800);
-     }
-
     cockraochService.addLog(username);
+
     ctx.redirect("/articulos?page=1");
   }
 
@@ -70,7 +73,7 @@ public class AuthController extends BaseController {
   public void proteger(Context ctx) {
     Usuario usuario = ctx.sessionAttribute("usuario");
     if (usuario != null)
-      ctx.redirect("/articulos");
+      ctx.redirect("/articulos?page=1");
   }
 
   @Override

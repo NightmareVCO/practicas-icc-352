@@ -2,6 +2,7 @@ package controllers;
 import encapsulation.Articulo;
 import encapsulation.Comentario;
 import encapsulation.Etiqueta;
+import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.ArticuloService;
@@ -17,6 +18,8 @@ public class ArticuloController extends BaseController {
   private final ArticuloService articuloService;
   private final EtiquetaService etiquetaService;
   private final ComentarioService comentarioService;
+  private final String ARTICULOS_INITIAL = "/articulos?page=1";
+
   public ArticuloController(Javalin app, ArticuloService articuloService, EtiquetaService etiquetaService, ComentarioService comentarioService) {
     super(app);
     this.articuloService = articuloService;
@@ -25,117 +28,155 @@ public class ArticuloController extends BaseController {
   }
 
   public void validarPaginas(Context ctx) {
-    if(ctx.queryParam("page") != null) {
-      if(Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page"))) < 1)
-        if (ctx.queryParam("tag") == null)
-          ctx.redirect("/articulos?page=1");
-        else
-          ctx.redirect("/articulos?page=1" + "&tag=" + ctx.queryParam("tag"));
+    String paginaActual = ctx.queryParam("page");
+    if (paginaActual == null) {
+      ctx.result("Pagina no encontrada");
+      return;
     }
+    String tag = ctx.queryParam("tag");
+    int paginaActualInt;
+
+    paginaActualInt = Integer.parseInt(paginaActual);
+    if (paginaActualInt >= 1)
+      return;
+    if (tag == null)
+      ctx.redirect(ARTICULOS_INITIAL);
+
+    ctx.redirect(ARTICULOS_INITIAL + "&tag=" + tag);
   }
 
   public void validarTag(Context ctx) {
-    if(Objects.equals(ctx.queryParam("tag"), "null")){
-      ctx.redirect("/articulos?page=" + ctx.queryParam("page"));
+    String paginaActual = ctx.queryParam("page");
+    String tag = ctx.queryParam("tag");
+
+    if (paginaActual == null)
+      ctx.result("Pagina no encontrada");
+    if (tag == null) {
+      ctx.result("Tag no existente");
+      return;
     }
+    if (!tag.equals("null")) //Si es "null" es el tag por defecto
+      return;
+
+    ctx.redirect("/articulos?page=" + paginaActual);
   }
 
-public void listar(Context ctx) {
- List<Articulo> articulos = new ArrayList<>();
- int pageSize = articuloService.getPageSize();
- int totalPage = 1;
+  private AbstractMap.SimpleEntry<List<Articulo>, Integer> getArticulosPaginados(Context ctx) {
+    List<Articulo> articulos = new ArrayList<>();
+    int articulosTotal = articuloService.getCantidadArticulos();
+    int articulosPorPagina = articuloService.getCantidadArticulosPorPagina();
+    int totalDePaginas = (int)Math.ceil((double)articulosTotal / articulosPorPagina);
+    int paginaActual;
+    int arituclosTotalPorTag;
+    String pa = ctx.queryParam("page");
+    if(pa == null){
+      ctx.result("Pagina no encontrada");
+      return new AbstractMap.SimpleEntry<>(articulos, totalDePaginas);
+    }
+    paginaActual = Integer.parseInt(pa);
 
-  if(ctx.queryParam("page") != null) {
-    int page = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page")));
+    if(ctx.queryParam("tag") == null){
+      if(paginaActual < 1)
+        ctx.redirect("/articulos?page=" + totalDePaginas);
+      else if(paginaActual > totalDePaginas)
+        ctx.redirect(ARTICULOS_INITIAL);
 
-    if(ctx.queryParam("tag") != null){
+      articulos = articuloService.findAllByPage(paginaActual, articulosPorPagina);
+    }
+    else {
       Etiqueta etiqueta = etiquetaService.find(ctx.queryParam("tag"));
-      if (etiqueta != null){
-        articulos = articuloService.findAllByPageAndTag(page, pageSize, etiqueta.getNombre());
-        totalPage = (int)Math.ceil((double) articuloService.manyArticlesByTag(etiqueta.getNombre()) / articuloService.getPageSize());
-        int currentPage = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page")));
-        if(currentPage < 1)
-          ctx.redirect("/articulos?page=" + totalPage + "&tag=" + etiqueta.getId());
-        else if(currentPage > totalPage)
-          ctx.redirect("/articulos?page=1&tag=" + etiqueta.getId());
+      if (etiqueta == null){
+        ctx.result("Tag no existente");
+        return new AbstractMap.SimpleEntry<>(articulos, totalDePaginas);
       }
-    }else{
-      totalPage = (int)Math.ceil((double)articuloService.getAritculosSize() / articuloService.getPageSize());
-      int currentPage = Integer.parseInt(Objects.requireNonNull(ctx.queryParam("page")));
-      if(currentPage < 1)
-        ctx.redirect("/articulos?page=" + totalPage);
-      else if(currentPage > totalPage)
-        ctx.redirect("/articulos?page=1");
+      arituclosTotalPorTag = articuloService.manyArticlesByTag(etiqueta.getNombre());
+      totalDePaginas = (int)Math.ceil((double)arituclosTotalPorTag / articulosPorPagina);
 
-      articulos = articuloService.findAllByPage(page, pageSize);
+      if(paginaActual < 1)
+        ctx.redirect("/articulos?page=" + totalDePaginas + "&tag=" + etiqueta.getId());
+      else if(paginaActual > totalDePaginas)
+        ctx.redirect("/articulos?page=1&tag=" + etiqueta.getId());
+
+      articulos = articuloService.findAllByPageAndTag(paginaActual, articulosPorPagina, etiqueta.getNombre());
     }
+
+    return new AbstractMap.SimpleEntry<>(articulos, totalDePaginas);
   }
+  public void listar(Context ctx) {
+    AbstractMap.SimpleEntry<List<Articulo>, Integer> result = getArticulosPaginados(ctx);
+    List<Articulo> articulos = result.getKey();
+    int totalDePaginas = result.getValue();
+    List<Etiqueta> etiquetas = etiquetaService.findAll();
+    String pa = ctx.queryParam("page");
+    assert pa != null;
+    int paginaActual = Integer.parseInt(pa);
+    String tag = ctx.queryParam("tag");
 
- List<Etiqueta> etiquetas = etiquetaService.findAll();
- Map<String, Object> modelo = new HashMap<>();
- modelo.put("articulos", articulos);
- modelo.put("etiquetas", etiquetas);
- modelo.put("page", Integer.valueOf(Objects.requireNonNull(ctx.queryParam("page"))));
- modelo.put("totalPage", totalPage);
- modelo.put("tag", ctx.queryParam("tag"));
- ctx.render("/public/templates/articulos.html", modelo);
-
+    Map<String, Object> modelo = setModelo(
+      "articulos", articulos,
+      "etiquetas", etiquetas,
+      "page", paginaActual,
+      "tag", tag
+    );
+    ctx.render("/public/templates/articulos.html", modelo);
   }
 
   public void listarUno(Context ctx) {
     Long id = Long.parseLong(ctx.pathParam("id"));
-
     Articulo articulo = articuloService.find(String.valueOf(id));
+    String etiquetas = etiquetaService.getEtiquetasString(articulo.getEtiquetas());
+    List<Comentario> comentarios = articulo.getComentarios();
 
-    Map<String, Object> modelo = new HashMap<>();
+    Map<String, Object> modelo = setModelo(
+      "articulo", articulo,
+      "etiquetas", etiquetas,
+      "comentarios", comentarios
+    );
 
-    modelo.put("articulo", articulo);
-    modelo.put("etiquetas", etiquetaService.getEtiquetasString(articulo.getEtiquetas()));
-    modelo.put("comentarios", articulo.getComentarios());
     ctx.render("/public/templates/mostrarArticulo.html", modelo);
   }
 
   public void crear(Context ctx) {
-   Articulo articulo = new Articulo();
-    articulo.setTitulo(ctx.formParam("titulo"));
-    articulo.setCuerpo(ctx.formParam("contenido"));
-    articulo.setFecha(new Date());
-    articulo.setAutor(Objects.requireNonNull(ctx.sessionAttribute("usuario")));
-    articulo.setEtiquetas(etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
+    String titulo = ctx.formParam("titulo");
+    String contenido = ctx.formParam("contenido");
+    Date fecha = new Date();
+    Usuario autor = ctx.sessionAttribute("usuario");
+    String e = ctx.formParam("etiquetas");
+    assert e != null;
+    Set<Etiqueta> etiquetas = etiquetaService.insertFromString(e);
 
-   articuloService.create(articulo);
-   ctx.redirect("/articulos?page=1");
+    articuloService.create(titulo, contenido, fecha, autor, etiquetas);
+    ctx.redirect(ARTICULOS_INITIAL);
   }
 
   public void editar(Context ctx) {
-    Articulo articulo = articuloService.find(String.valueOf(Long.parseLong(ctx.pathParam("id"))));
-    articulo.setTitulo(ctx.formParam("titulo"));
-    articulo.setCuerpo(ctx.formParam("contenido"));
-    articulo.setEtiquetas(etiquetaService.insertFromString(Objects.requireNonNull(ctx.formParam("etiquetas")).split(",")));
-    articuloService.modify(articulo);
-    ctx.redirect("/articulos?page=1");
+    String articuloId = (ctx.pathParam("id"));
+    String titulo = ctx.formParam("titulo");
+    String contenido = ctx.formParam("contenido");
+    String e = ctx.formParam("etiquetas");
+    assert e != null;
+    Set<Etiqueta> etiquetas = etiquetaService.insertFromString(e);
+
+    articuloService.modify(articuloId, titulo, contenido, new Date(), etiquetas);
+    ctx.redirect("/articulos/" + articuloId);
   }
 
   public void eliminar(Context ctx) {
-    Articulo articulo = articuloService.find(String.valueOf(Long.parseLong(ctx.pathParam("id"))));
-    articuloService.delete(String.valueOf(articulo.getId()));
-    ctx.redirect("/articulos?page=1");
+    String articuloId = ctx.pathParam("id");
+    articuloService.delete(articuloId);
+    ctx.redirect(ARTICULOS_INITIAL);
   }
-  
+
   public void ingresarComentario(Context ctx) {
-    long articuloId = Long.parseLong(ctx.pathParam("id"));
-    Articulo articulo = articuloService.find(String.valueOf(articuloId));
+    String articuloId = ctx.pathParam("id");
+    Articulo articulo = articuloService.find((articuloId));
+    String comentario = ctx.formParam("comentario");
+    Usuario autor = ctx.sessionAttribute("usuario");
 
-    Comentario comentario = new Comentario();
-    comentario.setComentario(ctx.formParam("comentario"));
-    comentario.setAutor(Objects.requireNonNull(ctx.sessionAttribute("usuario")));
-    comentario.setArticulo(articulo);
+    Comentario newComentario = comentarioService.create(comentario, autor, articulo);
+    articuloService.addComentario(articulo, newComentario);
 
-    comentarioService.create(comentario);
-    articulo.getComentarios().add(comentario); //malo, servicio debería hacer esto
-    articuloService.modify(articulo);
     ctx.redirect("/articulos/" + articuloId);
-
   }
 
   @Override

@@ -1,18 +1,24 @@
 package services;
 import encapsulation.Articulo;
+import encapsulation.Comentario;
 import encapsulation.Etiqueta;
+import encapsulation.Usuario;
 import jakarta.persistence.TypedQuery;
 import util.BaseServiceDatabase;
+
+import java.security.PublicKey;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ArticuloService extends BaseServiceDatabase<Articulo> {
-  private int aritculosSize;
-  private int pageSize;
+  private int cantidadArticulos;
+  private int cantidadArticulosPorPagina;
   public ArticuloService() {
     super(Articulo.class);
-    this.aritculosSize = 0;
-    this.pageSize = 2; //Cantidad de articulos por pagina
+    this.cantidadArticulos = 0;
+    this.cantidadArticulosPorPagina = 2;
   }
 
   public Articulo find(String articuloId) {
@@ -46,31 +52,62 @@ public class ArticuloService extends BaseServiceDatabase<Articulo> {
   public List<Articulo> findByEtiqueta(String etiqueta){
     return this.findAll().stream().filter(a -> a.getEtiquetas().stream().map(Etiqueta::getNombre).collect(Collectors.toSet()).contains(etiqueta)).collect(Collectors.toList());
   }
-  public Articulo create(Articulo articulo){
-    this.aritculosSize++;
+
+
+  public Articulo create(String titulo, String cuerpo, Date date, Usuario autor, Set<Etiqueta> etiquetas){
+    Articulo articulo = new Articulo();
+    articulo.setTitulo(titulo);
+    articulo.setCuerpo(cuerpo);
+    articulo.setFecha(date);
+    articulo.setAutor(autor);
+    articulo.setEtiquetas(etiquetas);
+
+    return this.createInDatabase(articulo);
+  }
+  public Articulo createInDatabase(Articulo articulo){
+    this.cantidadArticulos++;
     return this.dbCreate(articulo);
   }
-  public Articulo modify(Articulo articulo){
+
+  public Articulo modify(String articuloId, String titulo, String cuerpo, Date date, Set<Etiqueta> etiquetas){
+    Articulo articulo = this.find(articuloId);
+    articulo.setTitulo(titulo);
+    articulo.setCuerpo(cuerpo);
+    articulo.setFecha(date);
+    articulo.setEtiquetas(etiquetas);
+    return this.modifyInDatabase(articulo);
+  }
+  public Articulo addComentario(Articulo articulo, Comentario comentario){
+    articulo.getComentarios().add(comentario);
+    return this.modifyInDatabase(articulo);
+  }
+
+  public Articulo setComentarios(Articulo articulo, List<Comentario> comentarios){
+    articulo.setComentarios(comentarios);
+    return this.modifyInDatabase(articulo);
+  }
+
+  public Articulo modifyInDatabase(Articulo articulo){
     return this.dbModify(articulo);
   }
   public boolean delete(String articuloId){
-    this.aritculosSize--;
+    this.cantidadArticulos--;
     return this.dbRemove(articuloId);
   }
-  public int getAritculosSize(){
-    return this.aritculosSize;
+  public int getCantidadArticulos(){
+    return this.cantidadArticulos;
   }
 
-  public void setAritculosSize(int aritculosSize){
-    this.aritculosSize = aritculosSize;
+  public void setCantidadArticulos(int cantidadArticulos){
+    this.cantidadArticulos = cantidadArticulos;
   }
 
-  public int getPageSize(){
-    return this.pageSize;
+  public int getCantidadArticulosPorPagina(){
+    return this.cantidadArticulosPorPagina;
   }
 
-  public void setPageSize(int pageSize){
-    this.pageSize = pageSize;
+  public void setCantidadArticulosPorPagina(int cantidadArticulosPorPagina){
+    this.cantidadArticulosPorPagina = cantidadArticulosPorPagina;
   }
 
 }

@@ -19,8 +19,7 @@ public class EtiquetaController extends BaseController {
 
   public void listar(Context ctx) {
     List<Etiqueta> etiquetas = etiquetaService.findAll();
-    Map<String, Object> modelo = new HashMap<>();
-    modelo.put("etiquetas", etiquetas);
+    Map<String, Object> modelo = setModelo("etiquetas", etiquetas);
     ctx.render("/public/templates/articulos.html", modelo);
   }
 
