@@ -22,9 +22,9 @@ public class ComentarioService extends BaseServiceDatabase<Comentario> {
     comentario.setAutor(autor);
     comentario.setArticulo(articulo);
 
-    return this.dbCreate(comentario);
+    return this.createInDatabase(comentario);
   }
-  public Comentario createInDatabse(Comentario comentario){
+  public Comentario createInDatabase(Comentario comentario){
     return this.dbCreate(comentario);
   }
   public Comentario modify(Comentario comentario){
