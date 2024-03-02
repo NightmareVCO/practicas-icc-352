@@ -1,4 +1,5 @@
 package org.example;
+
 import controllers.*;
 import encapsulation.*;
 import io.javalin.Javalin;
@@ -9,7 +10,6 @@ import org.postgresql.ds.PGSimpleDataSource;
 import services.*;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 public class Main {
