@@ -20,7 +20,14 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
     return this.dbFindAll();
   }
 
-  public Etiqueta create(Etiqueta etiqueta) {
+  public Etiqueta create(String name) {
+    Etiqueta etiqueta = new Etiqueta();
+    etiqueta.setNombre(name);
+
+    return this.dbCreate(etiqueta);
+  }
+
+  public Etiqueta createInDatabase(Etiqueta etiqueta) {
     return this.dbCreate(etiqueta);
   }
 
@@ -32,8 +39,9 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
     return this.dbRemove(etiquetaId);
   }
 
-  public Set<Etiqueta> insertFromString(String[] etiquetas) {
-    String[] etiquetasLimpias = Arrays.stream(etiquetas).map(String::trim).toArray(String[]::new);
+  public Set<Etiqueta> insertFromString(String etiquetas) {
+    String[] etiquetasArray = etiquetas.split(",");
+    String[] etiquetasLimpias = Arrays.stream(etiquetasArray).map(String::trim).toArray(String[]::new);
     Set<String> etiquetasSet = new HashSet<>(Arrays.asList(etiquetasLimpias));
     Set<Etiqueta> newEtiquetas = new HashSet<>();
 
@@ -41,7 +49,7 @@ public class EtiquetaService extends BaseServiceDatabase<Etiqueta> {
       Etiqueta e = this.findByName(etiquetaName);
       Etiqueta newEtiqueta = new Etiqueta();
       newEtiqueta.setNombre(etiquetaName);
-      if (e == null) this.create(newEtiqueta);
+      if (e == null) this.createInDatabase(newEtiqueta);
       newEtiquetas.add(this.findByName(etiquetaName));
     }
     return newEtiquetas;

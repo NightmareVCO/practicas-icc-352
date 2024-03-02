@@ -11,8 +11,12 @@ public class Usuario implements Serializable {
   private boolean admin;
   private boolean autor;
   private boolean active;
-  @OneToOne()
+  @ManyToOne()
   private Foto foto;
+
+  public Usuario() {
+    this.active = true;
+  }
 
   public String getUsername() {
     return username;

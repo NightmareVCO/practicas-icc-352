@@ -1,4 +1,5 @@
 package services;
+import encapsulation.Foto;
 import encapsulation.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -19,12 +20,39 @@ public class UsuarioService extends BaseServiceDatabase<Usuario> {
     return this.dbFindAll();
   }
 
-  public Usuario create(Usuario usuario) {
+  public Usuario create(String username, String nombre, String password, boolean admin, boolean autor, Foto foto) {
+    Usuario usuario = new Usuario();
+    usuario.setUsername(username);
+    usuario.setNombre(nombre);
+    usuario.setPassword(password);
+    usuario.setAdmin(admin);
+    usuario.setAutor(autor);
+    usuario.setFoto(foto);
+
+    return this.createInDatabase(usuario);
+  }
+
+  public Usuario createInDatabase(Usuario usuario) {
     return this.dbCreate(usuario);
   }
 
-  public Usuario modify(Usuario usuario) {
+  public Usuario modify(String username, String nombre, String password, boolean admin, boolean autor) {
+    Usuario usuario = this.find(username);
+    usuario.setNombre(nombre);
+    usuario.setPassword(password);
+    usuario.setAdmin(admin);
+    usuario.setAutor(autor);
+
     return this.dbModify(usuario);
+  }
+  public Usuario modifyInDatabase(Usuario usuario) {
+    return this.dbModify(usuario);
+  }
+
+  public void desactivar(String username) {
+    Usuario usuario = this.find(username);
+    usuario.setActive(false);
+    this.dbModify(usuario);
   }
 
   public boolean delete(String username) {
