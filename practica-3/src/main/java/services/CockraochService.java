@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class CockraochService {
   private PGSimpleDataSource ds;
-  private String[] statements = {
+  private final String[] statements = {
     // Clear any existing data
     "DROP TABLE IF EXISTS usuarioLog",
     // CREATE the usuarios table

@@ -29,7 +29,7 @@ public class ArticuloService extends BaseServiceDatabase<Articulo> {
   }
 
   public List<Articulo> findAllByPage(int page, int pageSize){
-    TypedQuery<Articulo> query = this.getEntityManager().createQuery("SELECT a FROM Articulo a", Articulo.class);
+    TypedQuery<Articulo> query = this.getEntityManager().createQuery("SELECT a FROM Articulo a ORDER BY a.fecha desc ", Articulo.class);
     query.setFirstResult((page-1) * pageSize);
     query.setMaxResults(pageSize);
     return query.getResultList();

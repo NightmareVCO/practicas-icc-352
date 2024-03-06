@@ -20,7 +20,7 @@
       <div class="text-center">
         <h2 class="display-5 fw-bold text-body-emphasis">Articulos</h2>
       </div>
-      <div class="d-flex flex-column-reverse">
+      <div class="d-flex flex-column">
         <article class="card mb-2" style="width: 44rem;" th:each="a : ${articulos}">
           <div class="card-body">
             <h2 class="card-title" th:text="${a.titulo}"></h2>
