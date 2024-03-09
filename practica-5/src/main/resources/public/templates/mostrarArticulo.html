@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <script src="../assets/js/color-modes.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Articulos</title>
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="../css/headers.css" rel="stylesheet">
+</head>
+
+<body>
+<main>
+  <nav th:replace="~{/public/templates/fragments/navbar.html :: navbarFragment}"></nav>
+  <div th:replace="~{/public/templates/fragments/theme.html :: themeSwitch}"></div>
+
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <section th:if="${articulo}" class="d-flex flex-column w-75 justify-content-center align-items-center">
+      <article class="w-100">
+        <h1 class="text-center" th:text="${articulo.titulo}"></h1>
+        <p th:text="${articulo.cuerpo}"></p>
+        <div class="w-100 text-start">
+          <div class="d-flex flex-row gap-1">
+            <p th:each="e : ${articulo.etiquetas}"><span class="badge bg-secondary rounded-pill" th:text="${e.nombre}"></span></p>
+          </div>
+          <p><span th:text="${articulo.fecha}"></span></p>
+          <p><span th:text="'Autor: ' + ${articulo.autor.username}"></span></p>
+        </div>
+      </article>
+
+      <div th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})">
+        <button th:attr="articulo=${articulo.id}" onclick="sendDelete(this.getAttribute('articulo'))" class="btn btn-danger text-start">Eliminar</button>
+        <button class="btn btn-secondary text-start" data-bs-toggle="modal" data-bs-target="#articulo">Editar</button>
+      </div>
+      <script th:inline="javascript">
+        function sendDelete(url) {
+          const xhttp = new XMLHttpRequest();
+          xhttp.open("DELETE", url, true);
+          xhttp.onload = () => {
+            let responseURL = xhttp.responseURL;
+            window.location.replace(responseURL);
+          };
+          xhttp.send();
+          setTimeout(() => {
+            window.location.replace("/articulos");
+          }, 1000);
+        }
+      </script>
+
+      <article class="w-100">
+        <h2 class="text-start">Comentarios</h2>
+        <div class="d-flex flex-column gap-4">
+          <form th:action="${articulo.id} + '/comentario'" method="post" class="d-flex flex-column gap-2">
+            <label>
+              <textarea name="comentario" class="form-control" placeholder="Comentario" required></textarea>
+            </label>
+            <button th:if="${session.usuario}" class="btn btn-primary">Enviar</button>
+            <a th:unless="${session.usuario}" href="/auth/login" class="btn btn-primary">Log In</a>
+          </form>
+
+          <div class="d-flex flex-column-reverse border border-1 border-secondary rounded-3 mb-4">
+            <div class="ms-3 mt-2" th:each="c : ${comentarios}">
+              <p class="m-0"><strong th:text="${c.autor.username}"></strong></p>
+              <p class="text-break" th:text="${c.comentario}"></p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="end-0 p-4 text-center" >
+      <a href="/articulos" class="btn btn-secondary">Back</a>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="articulo" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Editar Articulo</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" th:action="'edit/' + ${articulo.id}">
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Titulo</label>
+                <input name="titulo" type="text" class="form-control w-25" id="nombre" th:value="${articulo.titulo}" aria-describedby="tituloHelp" required>
+                <div id="nombreHelp" class="form-text">Titulo del articulo</div>
+              </div>
+              <div class="mb-3">
+                <label for="contenido" class="form-label">Contenido</label>
+                <textarea name="contenido" class="form-control" id="contenido" rows="3" required th:text="${articulo.cuerpo}"></textarea>
+                <div id="passwordHelp" class="form-text">Contenido del articulo</div>
+              </div>
+              <div class="mb-3">
+                <label for="etiquetas" class="form-label">Etiquetas</label>
+                <input name="etiquetas" th:value="${etiquetas}" type="text" class="form-control w-25" id="etiquetas" aria-describedby="etiquetaHelp" list="listaEtiquetas" required>
+                <datalist id="listaEtiquetas">
+                  <option th:each="e : ${articulo.etiquetas}" th:value="${e.nombre} + ','">
+                </datalist>
+                <div id="etiquetaHelp" class="form-text">Etiquetas del articulo (separado por comas ',')</div>
+              </div>
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
