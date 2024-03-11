@@ -1,52 +1,58 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org/">
 <head>
-  <script src="../assets/js/color-modes.js"></script>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Articulos</title>
-  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom styles for this template -->
-  <link href="../css/headers.css" rel="stylesheet">
+    <script src="../assets/js/color-modes.js"></script>
+    <!-- Incluyendo la libreria de jQuery 3.7.1-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Articulos</title>
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../css/headers.css" rel="stylesheet">
+    <script>
+        $(document).ready(function () {
+            $('.pagination a').click(function (e) {
+                e.preventDefault();
+                var page = $(this).attr('href');
+                $.ajax({
+                    url: page,
+                    dataType: 'html',
+                    success: function (d) {
+                        var contenido = $(d).find("#article");
+                        $("#article").html(contenido.html());
+
+                    }
+                });
+            });
+        });
+    </script>
+
 </head>
 
 <body>
 <main class="d-flex flex-column">
-  <nav th:replace="~{/public/templates/fragments/navbar.html :: navbarFragment}"></nav>
-  <div th:replace="~{/public/templates/fragments/theme.html :: themeSwitch}"></div>
+    <nav th:replace="~{/public/templates/fragments/navbar.html :: navbarFragment}"></nav>
+    <div th:replace="~{/public/templates/fragments/theme.html :: themeSwitch}"></div>
 
-  <section class="d-flex flex-xxl-row flex-column justify-content-center gap-4">
-    <div class="col-7">
-      <div class="text-center">
-        <h2 class="display-5 fw-bold text-body-emphasis">Articulos</h2>
-      </div>
-      <div class="d-flex flex-column">
-        <article class="card mb-2" style="width: 44rem;" th:each="a : ${articulos}">
-          <div class="card-body">
-            <h2 class="card-title" th:text="${a.titulo}"></h2>
-            <p id="cuerpo" class="card-text mb-0" th:text="${#strings.abbreviate(a.cuerpo,70)}"></p>
-            <div class="d-flex flex-row gap-1">
-              <p th:each="e : ${a.etiquetas}"><span class="badge bg-secondary rounded-pill" th:text="${e.nombre}"></span></p>
+    <section id="article" class="d-flex flex-xxl-row flex-column justify-content-center gap-4">
+        <div class="col-7">
+            <div class="text-center">
+                <h2 class="display-5 fw-bold text-body-emphasis">Articulos</h2>
             </div>
-            <a th:href="'articulos/' + ${a.id}" class="btn btn-primary">Read More</a>
-          </div>
-        </article>
-      </div>
-    </div>
-
-    <aside class="col-3">
-      <div class="text-center">
-        <h2 class="display-5 fw-bold text-body-emphasis">Etiquetas</h2>
-      </div>
-      <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-2">
-        <div class="d-inline-flex card  align-items-center" style="width: 16rem">
-          <article th:each="e : ${etiquetas}">
-            <div class="card-body p-1">
-              <a th:href="'etiquetas/?tag=' + ${e.id}">
-                <h4><span class="badge bg-primary rounded-pill mb-0" th:text="${e.nombre}"></span></h4>
-              </a>
+            <div class="d-flex flex-column">
+                <article class="card mb-2" style="width: 44rem;" th:each="a : ${articulos}">
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${a.titulo}"></h2>
+                        <p id="cuerpo" class="card-text mb-0" th:text="${#strings.abbreviate(a.cuerpo,70)}"></p>
+                        <div class="d-flex flex-row gap-1">
+                            <p th:each="e : ${a.etiquetas}"><span class="badge bg-secondary rounded-pill"
+                                                                  th:text="${e.nombre}"></span></p>
+                        </div>
+                        <a th:href="'articulos/' + ${a.id}" class="btn btn-primary">Read More</a>
+                    </div>
+                </article>
             </div>
-          </article>
         </div>
       </div>
     </aside>
@@ -94,42 +100,82 @@
     </div>
   </div>
 
-<!-- Modal -->
-  <div class="modal fade" id="articulo" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Articulo</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <aside class="col-3">
+            <div class="text-center">
+                <h2 class="display-5 fw-bold text-body-emphasis">Etiquetas</h2>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-2">
+                <div class="d-inline-flex card  align-items-center" style="width: 16rem">
+                    <article th:each="e : ${etiquetas}">
+                        <div class="card-body p-1">
+                            <a th:href="'etiquetas/?tag=' + ${e.id}">
+                                <h4><span class="badge bg-primary rounded-pill mb-0" th:text="${e.nombre}"></span></h4>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </aside>
+
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/articulos?page=' + ${page - 1} + '&tag=' + ${tag}}">Previous</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{'/articulos?page=' + ${page + 1} + '&tag=' + ${tag}}">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-        <div class="modal-body">
-          <form method="POST" action="/articulos">
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Titulo</label>
-              <input name="titulo" type="text" class="form-control w-25" id="nombre" aria-describedby="tituloHelp" required>
-              <div id="nombreHelp" class="form-text">Titulo del articulo</div>
-            </div>
-            <div class="mb-3">
-              <label for="contenido" class="form-label">Contenido</label>
-              <textarea name="contenido" class="form-control" id="contenido" rows="3" required></textarea>
-              <div id="passwordHelp" class="form-text">Contenido del articulo</div>
-            </div>
-            <div class="mb-3">
-              <label for="etiquetas" class="form-label">Etiquetas</label>
-              <input name="etiquetas" type="text" class="form-control w-25" id="etiquetas" aria-describedby="etiquetaHelp" list="listaEtiquetas" required>
-              <datalist id="listaEtiquetas">
-                <option th:each="e : ${etiquetas}" th:value="${e.nombre} + ','">
-              </datalist>
-              <div id="etiquetaHelp" class="form-text">Etiquetas del articulo (separado por comas ',')</div>
-            </div>
-            <div class="text-end">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
+    </section>
+    <div th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})"
+         class="end-0 p-4 text-center">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articulo">Crear Articulo
+        </button>
     </div>
-  </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="articulo" tabindex="-1" aria-labelledby="usuarioModal" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Articulo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/articulos">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Titulo</label>
+                            <input name="titulo" type="text" class="form-control w-25" id="nombre"
+                                   aria-describedby="tituloHelp" required>
+                            <div id="nombreHelp" class="form-text">Titulo del articulo</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contenido" class="form-label">Contenido</label>
+                            <textarea name="contenido" class="form-control" id="contenido" rows="3" required></textarea>
+                            <div id="passwordHelp" class="form-text">Contenido del articulo</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="etiquetas" class="form-label">Etiquetas</label>
+                            <input name="etiquetas" type="text" class="form-control w-25" id="etiquetas"
+                                   aria-describedby="etiquetaHelp" list="listaEtiquetas" required>
+                            <datalist id="listaEtiquetas">
+                                <option th:each="e : ${etiquetas}" th:value="${e.nombre} + ','">
+                            </datalist>
+                            <div id="etiquetaHelp" class="form-text">Etiquetas del articulo (separado por comas ',')
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 </body>
