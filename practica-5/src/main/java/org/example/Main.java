@@ -5,12 +5,14 @@ import encapsulation.*;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.bundled.CorsPluginConfig;
+
+import org.eclipse.jetty.websocket.api.Session;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.postgresql.ds.PGSimpleDataSource;
 import services.*;
 
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
   public static void main(String[] args) {
@@ -25,6 +27,10 @@ public class Main {
       config.plugins.enableCors(corsContainer -> corsContainer.add(CorsPluginConfig::anyHost));
     }).start(3000);
 
+    List<Session> usuariosConectados = new ArrayList<>();
+    Map<String, StringBuilder> mensajesChat = new ConcurrentHashMap<>();
+    Map<Integer, Map<String, Session>> usuariosChat = new ConcurrentHashMap<>();
+
     BootstrapService bootstrapService = new BootstrapService();
     bootstrapService.startDb();
     BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
@@ -35,6 +41,7 @@ public class Main {
     EtiquetaService etiquetaService = new EtiquetaService();
     UsuarioService usuarioService = new UsuarioService();
     FotoService fotoService = new FotoService();
+    ChatService chatService = new ChatService();
     AuthService authService = new AuthService(textEncryptor);
     CockraochService cockraochService = new CockraochService(ds);
     cockraochService.init();
@@ -47,9 +54,11 @@ public class Main {
     new ComentarioController(app, comentarioService).applyRoutes();
     new EtiquetaController(app, etiquetaService).applyRoutes();
     new UsuarioController(app, usuarioService, fotoService).applyRoutes();
+    new ChatController(app, chatService, usuariosConectados, mensajesChat, usuariosChat).applyRoutes();
     new AuthController(app, usuarioService, authService, cockraochService).applyRoutes();
 
     app.get("/", ctx -> ctx.redirect("/articulos?page=1"));
+
   }
 
   public static void addInfo(UsuarioService usuarioService, EtiquetaService etiquetaService, ArticuloService articuloService, ComentarioService comentarioService, FotoService fotoService) {

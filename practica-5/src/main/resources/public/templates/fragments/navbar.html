@@ -11,14 +11,13 @@
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
       <li><a href="/" class="nav-link px-2">Home</a></li>
       <li><a href="/articulos?page=1" class="nav-link px-2">Articulos</a></li>
+      <li th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})"><a href="/chats" class="nav-link px-2">Chats</a></li>
       <li th:if="${session.usuario}"><a href="/usuarios" th:if="${session.usuario.admin}" class="nav-link px-2">Usuarios</a></li>
     </ul>
 
     <div class="col-md-3 text-end">
       <a href="/auth/login" class="btn btn-outline-primary me-2" th:unless="${session.usuario}">Login</a>
       <a href="/auth/logout" class="btn btn-outline-primary me-2" th:if="${session.usuario}">Log Out</a>
-      <!--        <button type="button" class="btn btn-outline-primary me-2">Login</button>-->
-      <!--        <button type="button" class="btn btn-primary">Sign-up</button>-->
     </div>
   </header>
 </div>

@@ -54,6 +54,51 @@
                 </article>
             </div>
         </div>
+      </div>
+    </aside>
+  </section>
+
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" th:href="@{'/articulos?page=' + ${page - 1} + '&tag=' + ${tag}}">Previous</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" th:href="@{'/articulos?page=' + ${page + 1} + '&tag=' + ${tag}}">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="end-0 p-4 text-center">
+    <button th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})" type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#articulo">Crear Articulo</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#chatbox">ChatBox</button>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="chatbox" tabindex="-1" aria-labelledby="chatboxModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel2">Abrir ChatBox</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="/chat">
+            <div class="mb-3">
+              <label for="nombreChat" class="form-label">Nombre</label>
+              <input name="nombre" type="text" class="form-control w-75 " id="nombreChat" aria-describedby="nombreHelp" required>
+              <div id="nombreChatHelp" class="form-text">Nombre Del Usuario</div>
+            </div>
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
         <aside class="col-3">
             <div class="text-center">

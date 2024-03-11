@@ -41,6 +41,11 @@ public class AuthController extends BaseController {
     boolean remember = ctx.formParam("remember") != null;
     Usuario usuario = usuarioService.findByUsername(username);
 
+    if (usuario == null) {
+      ctx.redirect("/auth/login");
+      return;
+    }
+
     if(!usuario.isActive()){
       ctx.sessionAttribute("usuario_inactivo", "Usuario inactivo, favor contactar al administrador.");
       ctx.redirect("/auth/login");

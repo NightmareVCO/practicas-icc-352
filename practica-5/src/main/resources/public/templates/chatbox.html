@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <script src="../assets/js/color-modes.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ChatBox</title>
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <script src="../js/jquery-3.2.1.min.js"></script>
+  <script src="../js/websocket.js"></script>
+</head>
+
+<body>
+<main>
+  <nav th:replace="~{/public/templates/fragments/navbar.html :: navbarFragment}"></nav>
+  <div th:replace="~{/public/templates/fragments/theme.html :: themeSwitch}"></div>
+
+  <section id="chat-container" class="d-flex flex-column align-items-center gap-1">
+    <h2 th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})" th:text="${agente} + ' Chatting With ' + ${usuario}"></h2>
+    <h2 th:unless="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})" th:text="${usuario} + ' Chatting With Agent'"></h2>
+    <area id="chat-box" class="w-75 overflow-scroll bg-white px-2" style="height: 575px" alt="chat"></area>
+
+    <form id="chat-form" action="#">
+      <label>
+        <input type="text" id="chat-input" placeholder="Type a message..." required>
+      </label>
+      <button type="submit" id="chat-button">Send</button>
+    </form>
+  </section>
+
+</main>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
