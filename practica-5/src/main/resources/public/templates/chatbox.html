@@ -19,7 +19,7 @@
   <section id="chat-container" class="d-flex flex-column align-items-center gap-1">
     <h2 th:if="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})" th:text="${agente} + ' Chatting With ' + ${usuario}"></h2>
     <h2 th:unless="${session.usuario} and (${session.usuario.admin} or ${session.usuario.autor})" th:text="${usuario} + ' Chatting With Agent'"></h2>
-    <area id="chat-box" class="w-75 overflow-scroll bg-white px-2" style="height: 575px" alt="chat"></area>
+    <div id="chat-box" class="w-75 overflow-scroll bg-white px-2" style="height: 575px"></div>
 
     <form id="chat-form" action="#">
       <label>
