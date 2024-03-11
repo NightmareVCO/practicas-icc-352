@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org/">
+<head>
+  <script src="../assets/js/color-modes.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Listar Chats</title>
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+</head>
+<body>
+<main class="d-flex flex-column justify-content-center align-items-center">
+  <nav th:replace="~{/public/templates/fragments/navbar.html :: navbarFragment}"></nav>
+  <div th:replace="~{/public/templates/fragments/theme.html :: themeSwitch}"></div>
+
+<!--  Listar todos los chats en una tabla con un boton de ir, los recibe por un modelo-->
+  <section class="w-75">
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">Ultimo Mensaje</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="c, iterStat : ${chats}">
+        <th scope="row" th:text="${iterStat.index + 1}"></th>
+        <td th:text="${c.usuario}"></td>
+        <td th:text="${c.mensaje}"></td>
+        <td><a class="btn btn-secondary" th:href="'chatResponse/' + ${c.id}">Ir</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+</main>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
