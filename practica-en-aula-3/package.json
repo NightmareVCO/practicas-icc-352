@@ -1,0 +1,16 @@
+{
+  "name": "practica-en-aula-3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rest.js",
+  "type": "module",
+  "scripts": {
+    "run": "node rest.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8"
+  }
+}
