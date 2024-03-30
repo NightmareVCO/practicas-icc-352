@@ -72,7 +72,7 @@ console.log("4. Eliminar un estudiante");
 console.log("5. Modificar un estudiante");
 
 const stdin = process.openStdin();
-stdin.addListener("data", function(d) {
+stdin.addListener("data", (d) => {
   const option = d.toString().trim();
   switch (option) {
     case "1":

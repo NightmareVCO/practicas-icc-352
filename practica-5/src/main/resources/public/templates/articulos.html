@@ -25,7 +25,7 @@
         </div>
         <div class="d-flex flex-column">
           <div id="articulos">
-            <article class="card mb-2" style="width: 44rem;" th:each="a : ${articulos}">
+            <article class="card mb-2" style="width: 48rem;" th:each="a : ${articulos}">
               <div class="card-body">
                 <h2 class="card-title" th:text="${a.titulo}"></h2>
                 <p id="cuerpo" class="card-text mb-0" th:text="${#strings.abbreviate(a.cuerpo,70)}"></p>
@@ -44,7 +44,7 @@
           <h2 class="display-5 fw-bold text-body-emphasis">Etiquetas</h2>
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-2">
-          <div class="d-inline-flex card  align-items-center" style="width: 16rem">
+          <div class="d-inline-flex card  align-items-center" style="width: 28rem">
             <article th:each="e : ${etiquetas}">
               <div class="card-body p-1">
                 <a th:href="'etiquetas/?tag=' + ${e.id}">

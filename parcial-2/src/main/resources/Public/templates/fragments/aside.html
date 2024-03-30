@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<div th:fragment="asideFragment">
+  <div id="layoutSidenav_nav">
+    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+      <div class="sb-sidenav-menu">
+        <div class="nav">
+          <div class="sb-sidenav-menu-heading">Core</div>
+          <a class="nav-link" href="/dashboard">
+            <div class="sb-nav-link-icon"><i class="fas fa-square-poll-horizontal"></i></div>
+            Dashboard
+          </a>
+          <a class="nav-link" href="/dashboardOffline">
+            <div class="sb-nav-link-icon"><i class="fas fa-square-poll-horizontal"></i></div>
+            Dashboard Offline
+          </a>
+          <a class="nav-link" href="/form">
+            <div class="sb-nav-link-icon"><i class="fas fa-tablet-button"></i></div>
+            Form
+          </a>
+          <a class="nav-link" href="/formOffline">
+            <div class="sb-nav-link-icon"><i class="fas fa-tablet-button"></i></div>
+            Offline Form
+          </a>
+          <a class="nav-link" href="/users">
+            <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+            Users
+          </a>
+          <a class="nav-link" href="/auth/login">
+            <div class="sb-nav-link-icon"><i class="fas fa-right-to-bracket"></i></div>
+            Log In
+          </a>
+          <a class="nav-link" href="/auth/logout">
+            <div class="sb-nav-link-icon"><i class="fas fa-right-from-bracket"></i></div>
+            Log Out
+          </a>
+        </div>
+      </div>
+      <div class="sb-sidenav-footer">
+        <div class="small">Logged in as:</div>
+        <div th:if="${session.user}">
+          <p class="mb-0" th:text="${session.user.username}"></p>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+</html>
