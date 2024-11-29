@@ -66,11 +66,27 @@ public class UsuarioService extends BaseServiceDatabase<Usuario> {
 
   public Usuario findByUsername(String username) {
     try (EntityManager em = getEntityManager()) {
-      Query query = em.createQuery("SELECT u FROM Usuario u WHERE u.username = :username");
-      query.setParameter("username", username);
-      return (Usuario) query.getSingleResult();
+      // Consulta vulnerable para inyección SQL
+      String query = "SELECT u FROM Usuario u WHERE u.username = '" + username + "'";
+      System.out.println("Consulta ejecutada: " + query); // Log de depuración
+      Query q = em.createQuery(query);
+
+      // Obtiene los resultados en una lista
+      List<Usuario> usuarios = q.getResultList();
+
+      // Si no hay resultados, retorna null
+      if (usuarios.isEmpty()) {
+        return null;
+      }
+
+      // Retorna el primer usuario de la lista
+      return usuarios.get(0);
     } catch (Exception e) {
+      e.printStackTrace();
       return null;
     }
   }
+
+
+
 }

@@ -4,14 +4,10 @@ import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
-import services.CockraochService;
 import services.FotoService;
 import services.UsuarioService;
 import util.BaseController;
 
-import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

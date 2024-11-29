@@ -3,7 +3,6 @@ import encapsulation.Usuario;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import services.AuthService;
-import services.CockraochService;
 import services.UsuarioService;
 import util.BaseController;
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -11,13 +10,11 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 public class AuthController extends BaseController {
   private final UsuarioService usuarioService;
   private final AuthService authService;
-  private final CockraochService cockraochService;
 
-  public AuthController(Javalin app, UsuarioService usuarioService, AuthService authService, CockraochService cockraochService) {
+  public AuthController(Javalin app, UsuarioService usuarioService, AuthService authService) {
     super(app);
     this.usuarioService = usuarioService;
     this.authService = authService;
-    this.cockraochService = cockraochService;
   }
 
   public void login(Context ctx) {
@@ -30,33 +27,21 @@ public class AuthController extends BaseController {
     String username = authService.decryptText(usuarioEncryptado);
     Usuario usuarioEnCookie = usuarioService.findByUsername(username);
     ctx.sessionAttribute("usuario", usuarioEnCookie);
-    cockraochService.addLog(usuarioEnCookie.getUsername());
 
     ctx.redirect("/articulos?page=1");
   }
 
   public void checkLogin(Context ctx) {
-    String username = ctx.formParam("username");
+    String username = ctx.formParam("username"); // Entrada no validada
     String password = ctx.formParam("password");
-    boolean remember = ctx.formParam("remember") != null;
-    Usuario usuario = usuarioService.findByUsername(username);
+    Usuario usuario = usuarioService.findByUsername(username); // Potencialmente vulnerable
 
-    if(!usuario.isActive()){
-      ctx.sessionAttribute("usuario_inactivo", "Usuario inactivo, favor contactar al administrador.");
-      ctx.redirect("/auth/login");
-      return;
-    }
-
-    if(!usuarioService.checkPassword(username, password) || usuario == null) {
+    if (!usuarioService.checkPassword(username, password) || usuario == null) {
       ctx.redirect("/auth/login");
       return;
     }
 
     ctx.sessionAttribute("usuario", usuario);
-     if(remember)
-       ctx.cookie("usuario", authService.encryptText(usuario.getUsername()), 604800);
-    cockraochService.addLog(username);
-
     ctx.redirect("/articulos?page=1");
   }
 
